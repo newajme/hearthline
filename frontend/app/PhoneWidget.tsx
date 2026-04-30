@@ -49,7 +49,7 @@ export default function PhoneWidget() {
           </svg>
         </div>
         <div className="phone-title">Incoming Call</div>
-        <div className="phone-num">+33 6 12 34 56 78</div>
+        <div className="phone-num">+1 (000) 123-4567</div>
         <div className="phone-call-actions">
           <div className="phone-action">
             <button className="phone-action-btn decline" aria-label="Decline call">

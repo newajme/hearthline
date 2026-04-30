@@ -8,13 +8,13 @@ type TickerItem = {
 };
 
 const ITEMS: TickerItem[] = [
-  { kind: "deal", text: "Deal won · $12,300 HVAC install · Sacramento" },
+  { kind: "deal", text: "Deal won · $12,300 HVAC install · demo lead #001" },
   { kind: "quote", text: "Photo quote drafted · $8,500 roof replacement" },
-  { kind: "sms", text: "HVAC lead qualified via SMS · Oakland" },
-  { kind: "booked", text: "Saturday 9 AM booked · garage door · Liftmaster" },
+  { kind: "sms", text: "HVAC lead qualified via SMS · demo lead #002" },
+  { kind: "booked", text: "Saturday 9 AM booked · garage door repair" },
   { kind: "subsidy", text: "Solar rebate match found · $2,400 saved" },
   { kind: "call", text: "Anna answered call #247 · 02:14 duration" },
-  { kind: "deal", text: "Deal won · $9,450 window install · Berkeley" },
+  { kind: "deal", text: "Deal won · $9,450 window install · demo lead #003" },
   { kind: "quote", text: "Smart-thermostat add-on quoted · $1,200" },
 ];
 

@@ -89,7 +89,7 @@ function CrmDemo() {
         </div>
       </div>
       <div className="demo-fields">
-        <Field label="Contact" value="Mark Johnson · +1 (555) 777-8888" />
+        <Field label="Contact" value="Demo Customer 001 · +1 (000) 123-4567" />
         <Field label="Source" value="Inbound Call · Vapi" />
         <Field label="Trade" value="HVAC" />
         <Field label="Estimated value" value="$12,300" />

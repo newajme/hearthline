@@ -21,15 +21,18 @@ type Row = {
 };
 
 const ASSISTANTS = ["Anna", "Thomas", "Julie", "Marie", "Leo"];
+// Demo data — placeholder contact info so nothing on the landing page looks
+// like a real person's phone/email. Uses 000-prefix numbers and example.test
+// emails (both reserved for documentation / fictional use).
 const NAMES: Array<[string, string]> = [
-  ["Mark Johnson", "+1 (555) 777-8888"],
-  ["Alice Smith", "alice@example.com"],
-  ["David Chen", "+1 (555) 333-9999"],
-  ["Sara Patel", "sara.patel@example.com"],
-  ["Liam Bauer", "+1 (555) 221-7430"],
-  ["Emma Walsh", "emma@walshroofing.io"],
-  ["Diego Ruiz", "+1 (555) 991-3340"],
-  ["Olivia Park", "olivia@bayhvac.com"],
+  ["Customer 001", "+1 (000) 123-4567"],
+  ["Customer 002", "demo-002@example.test"],
+  ["Customer 003", "+1 (000) 234-5678"],
+  ["Customer 004", "demo-004@example.test"],
+  ["Customer 005", "+1 (000) 345-6789"],
+  ["Customer 006", "demo-006@example.test"],
+  ["Customer 007", "+1 (000) 456-7890"],
+  ["Customer 008", "demo-008@example.test"],
 ];
 const MESSAGES: Array<{ msg: string; action: Action }> = [
   { msg: "Confirmed — proceed with the HVAC install for Tuesday.", action: { kind: "deal-won", amount: 12300 } },
