@@ -1,227 +1,182 @@
 # Deploying Hearthline
 
-Same pattern as the [codewithmuh.com](https://codewithmuh.com) stack:
+Two supported paths — pick the one that matches your operations.
 
-- **Frontend (Next.js) → Vercel** — auto-deploys from GitHub
-- **Backend (Django + Postgres) → Docker Compose on a VPS** — Caddy out front for auto-HTTPS
-
-Total cost for a single demo: **~$6–10/mo VPS + Vercel free tier + Vapi $2/mo + per-minute talk**.
-
----
-
-## 1. Backend — VPS + Docker Compose + Caddy
-
-### a. Spin up a tiny VPS
-
-Anything works:
-
-| Provider | Cheapest option |
-|----------|-----------------|
-| Hetzner | CX22 — €4.50/mo |
-| DigitalOcean | $6/mo droplet |
-| OVH | VPS Starter |
-| your existing Docker host | free |
-
-Ubuntu 22.04 / 24.04. SSH in.
-
-### b. Install Docker + Docker Compose
-
-```bash
-curl -fsSL https://get.docker.com | sh
-sudo usermod -aG docker $USER
-newgrp docker
-```
-
-### c. Clone + configure
-
-```bash
-git clone https://github.com/codewithmuh/hearthline.git
-cd hearthline
-cp .env.example .env
-nano .env     # fill in the prod values (see below)
-```
-
-Minimum `.env` for production:
-
-```bash
-POSTGRES_DB=hearthline
-POSTGRES_USER=hearthline
-POSTGRES_PASSWORD=$(openssl rand -base64 32)   # generate one
-DJANGO_SECRET_KEY=$(openssl rand -base64 50)   # generate one
-DJANGO_DEBUG=0
-
-API_DOMAIN=api.hearthline.codewithmuh.com
-FRONTEND_ORIGIN=https://hearthline.codewithmuh.com
-DJANGO_ALLOWED_HOSTS=api.hearthline.codewithmuh.com
-DJANGO_CORS_ALLOWED_ORIGINS=https://hearthline.codewithmuh.com
-
-ANTHROPIC_API_KEY=...
-OPENAI_API_KEY=...
-VAPI_API_KEY=...
-TWILIO_ACCOUNT_SID=...
-TWILIO_AUTH_TOKEN=...
-TWILIO_FROM_NUMBER=+1...
-```
-
-### d. Point DNS
-
-Add an A record:
-
-```
-api.hearthline.codewithmuh.com  →  <your-vps-ip>
-```
-
-### e. Boot the stack
-
-```bash
-docker compose -f docker-compose.prod.yml up -d --build
-```
-
-Caddy automatically issues a Let's Encrypt cert on first request. Within 30 seconds:
-
-```bash
-curl https://api.hearthline.codewithmuh.com/api/health/
-# {"status": "ok", "service": "hearthline"}
-```
-
-### f. Seed demo data + admin user
-
-```bash
-docker compose -f docker-compose.prod.yml exec backend python manage.py seed_demo --wipe
-docker compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
-```
-
-Django admin lives at `https://api.hearthline.codewithmuh.com/admin/`.
+| Path | Cost | Best for |
+|------|------|----------|
+| **A — All on Vercel** *(experimental multi-service)* | Free + Postgres ~$10/mo | Same workflow as codewithmuh.com, zero-VPS |
+| B — Vercel frontend + Docker Compose VPS backend | $6 VPS + Vercel free | Long-running webhooks, no cold starts, full Django admin |
 
 ---
 
-## 2. Frontend — Vercel
+## Path A — All on Vercel (recommended for the demo)
 
-### a. Push the repo to GitHub
+Vercel's experimental multi-service feature deploys the Next.js frontend AND the Django backend as serverless functions in one project.
+
+The repo already ships with the right configs:
+
+- `vercel.json` (root) — declares both services and their routePrefixes
+- `backend/api/index.py` — Vercel Python entrypoint that exposes Django's WSGI app
+- `backend/vercel.json` — Python runtime config with 60s function timeout
+
+### a. Push the repo
 
 ```bash
 gh repo create codewithmuh/hearthline --public --source=. --remote=origin --push
 ```
 
-### b. Import on Vercel
+### b. Add a Postgres database
 
-1. Go to [vercel.com/new](https://vercel.com/new) → Import the repo
-2. **Root Directory:** `frontend`
-3. Vercel auto-detects Next.js, no build override needed
+Vercel doesn't host Postgres directly, but its **Storage tab** integrates with **Neon** (recommended) or **Supabase** in one click. Neon's free tier is plenty for the demo and includes pgbouncer pooling for serverless.
 
-### c. Environment variables
+1. Vercel project → Storage → Create Database → **Neon Postgres**
+2. Vercel auto-injects `DATABASE_URL` into the project env
+3. Use the **pooled** connection string (Neon shows a `?pgbouncer=true` URL) — serverless functions open fresh connections per invocation
+
+### c. Import on Vercel
+
+1. [vercel.com/new](https://vercel.com/new) → import `codewithmuh/hearthline`
+2. Vercel detects both services from the root `vercel.json`:
+   - **frontend** — Next.js at `/`
+   - **backend** — Django at `/_/backend`
+3. Set environment variables (Production):
 
 ```
-INTERNAL_API_URL    = https://api.hearthline.codewithmuh.com/api
-NEXT_PUBLIC_API_URL = https://api.hearthline.codewithmuh.com/api
+# Django
+DJANGO_SECRET_KEY=<openssl rand -base64 50>
+DJANGO_DEBUG=0
+DJANGO_ALLOWED_HOSTS=hearthline.codewithmuh.com,*.vercel.app
+DJANGO_CORS_ALLOWED_ORIGINS=https://hearthline.codewithmuh.com
+
+# AI
+ANTHROPIC_API_KEY=...
+OPENAI_API_KEY=...
+
+# Voice (optional, for live calls)
+VAPI_API_KEY=...
+VAPI_PHONE_NUMBER_ID=...
+TWILIO_ACCOUNT_SID=...
+TWILIO_AUTH_TOKEN=...
+TWILIO_FROM_NUMBER=+1...
+
+# Frontend → Backend (same Vercel project, both deploy together)
+INTERNAL_API_URL=https://hearthline.codewithmuh.com/_/backend/api
+NEXT_PUBLIC_API_URL=https://hearthline.codewithmuh.com/_/backend/api
 ```
 
-`INTERNAL_API_URL` is what server components use; `NEXT_PUBLIC_API_URL` is what the browser uses. Both point to the same Caddy domain in production.
+> Note: with multi-service deploys the backend is served at `https://<your-domain>/_/backend/...`. The Next.js app calls it via the relative `/_/backend/api/...` path.
 
-### d. Custom domain
+4. Deploy — Vercel ships the frontend + backend in one push.
 
-Add `hearthline.codewithmuh.com` (or whatever subdomain you want) on Vercel → Domains. Vercel issues a CNAME you add at your DNS provider.
+### d. Run migrations (one-time)
 
-### e. Push to deploy
+Vercel doesn't have a persistent shell, so run migrations from your laptop pointed at the Neon DB:
 
-Every push to `main` triggers a Vercel build. ~30s deploys.
+```bash
+cd backend
+DATABASE_URL=<neon-pooled-url> python manage.py migrate
+DATABASE_URL=<neon-pooled-url> python manage.py seed_demo --wipe
+DATABASE_URL=<neon-pooled-url> python manage.py createsuperuser
+```
 
----
-
-## 3. Wire Vapi to the live backend
-
-On your Vapi Assistant (model = Custom LLM):
+### e. Wire Vapi to the Vercel-hosted backend
 
 | Field | Value |
 |------|-------|
-| Custom LLM URL | `https://api.hearthline.codewithmuh.com/api/calls/vapi/chat/completions/` |
+| Custom LLM URL | `https://hearthline.codewithmuh.com/_/backend/api/calls/vapi/chat/completions/` |
+| Server URL | `https://hearthline.codewithmuh.com/_/backend/api/calls/webhooks/vapi/` |
 | Model | `claude-sonnet-4-6` |
 | First message | `Hi, this is Anna at Rolling Shutters. How can I help?` |
-| Server URL | `https://api.hearthline.codewithmuh.com/api/calls/webhooks/vapi/` |
 
-Buy a phone number in Vapi → attach the assistant → place a real call. Anna answers, runs `qualify_lead` + `book_appointment`, the call lands in `/dashboard/calls` seconds after hangup.
+Buy a phone number on Vapi → attach the assistant → call it.
+
+### Vercel serverless caveats
+
+- **60s function timeout** — Anna's agentic loop usually finishes in 4–8s, can spike to 15–30s on heavy tool use. Already set to 60s in `backend/vercel.json`.
+- **Cold starts** — first call after idle takes ~2s. Vapi handles this well; the Twilio fallback may not.
+- **No background jobs** — async work (review-request after job complete) needs a queue (Vercel Cron + a separate function, or Inngest).
 
 ---
 
-## 4. Updating
+## Path B — Vercel frontend + Docker Compose VPS backend
+
+If you outgrow Vercel's serverless constraints (long Vapi calls, large transcripts, full Django admin with media uploads), this path is rock-solid:
+
+- **Frontend → Vercel** (same as Path A — but `INTERNAL_API_URL` / `NEXT_PUBLIC_API_URL` point to your VPS)
+- **Backend (Django + Postgres) → Docker Compose on a small VPS** with **Caddy** for auto-HTTPS
+
+The repo already includes `docker-compose.prod.yml` + `Caddyfile`.
 
 ```bash
-# on the VPS:
-cd hearthline
-git pull
+# on a $6 Hetzner / DigitalOcean VPS:
+git clone https://github.com/codewithmuh/hearthline.git && cd hearthline
+cp .env.example .env && nano .env
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Migrations run automatically on container start (the Dockerfile.prod CMD wraps `python manage.py migrate --noinput`).
-
-Frontend updates: just push to `main`, Vercel ships.
-
----
-
-## 5. Watch + maintain
-
-```bash
-# tail backend logs
-docker compose -f docker-compose.prod.yml logs -f backend
-
-# tail Caddy access log
-docker compose -f docker-compose.prod.yml logs -f caddy
-
-# database shell
-docker compose -f docker-compose.prod.yml exec db psql -U hearthline
-
-# free disk
-docker system prune -f
+Point DNS:
+```
+api.hearthline.codewithmuh.com  →  <your-vps-ip>
 ```
 
-Backup the Postgres volume nightly:
+Caddy issues a Let's Encrypt cert on first request — everything HTTPS in 30s.
 
-```bash
-# add to root crontab:
-0 3 * * * docker compose -f /root/hearthline/docker-compose.prod.yml exec -T db \
-  pg_dump -U hearthline hearthline | gzip > /root/backups/$(date +\%F).sql.gz
+Vercel env vars:
+```
+INTERNAL_API_URL=https://api.hearthline.codewithmuh.com/api
+NEXT_PUBLIC_API_URL=https://api.hearthline.codewithmuh.com/api
 ```
 
----
+Migrations + seed:
+```bash
+docker compose -f docker-compose.prod.yml exec backend python manage.py seed_demo --wipe
+docker compose -f docker-compose.prod.yml exec backend python manage.py createsuperuser
+```
 
-## 6. Cost ballpark
-
-| Line item | Cost |
-|-----------|------|
-| Hetzner CX22 VPS (or equivalent) | €4.50–6/mo |
-| Vercel Hobby (frontend) | $0 |
-| Vapi phone number | ~$2/mo |
-| Vapi talk usage | ~$0.07/min |
-| Twilio SMS | ~$0.0079/message |
-| Anthropic Claude Sonnet 4.6 | usage-based |
-| OpenAI GPT-4o vision | usage-based |
-| **Demo monthly total** | **~$10–25/mo** |
+Wire Vapi the same way but at the VPS domain.
 
 ---
 
-## 7. Troubleshooting
+## Cost ballpark
 
-**Vercel says "Backend unreachable"**
-→ `INTERNAL_API_URL` and `NEXT_PUBLIC_API_URL` on Vercel must point to your Caddy domain over HTTPS. Re-deploy after changing.
-
-**Caddy says "no certificate available"**
-→ DNS A record hasn't propagated yet. `dig api.hearthline.codewithmuh.com` on the VPS — should return its public IP. Wait, then `docker compose -f docker-compose.prod.yml restart caddy`.
-
-**Anna sounds robotic / says "I'd love to help, but my AI brain isn't connected"**
-→ `ANTHROPIC_API_KEY` not in `.env`, or model access not granted. Set it, then `docker compose -f docker-compose.prod.yml restart backend`.
-
-**Migration errors on first up**
-→ `docker compose -f docker-compose.prod.yml exec backend python manage.py migrate` and read the error. Usually a missing env var.
-
-**Vapi webhook 502s**
-→ Caddy's `request_body` cap might be too tight. Bump it in `Caddyfile` and reload Caddy. We default to 8MB which fits long transcripts.
+| Component | Path A (all Vercel) | Path B (Vercel + VPS) |
+|-----------|---------------------|----------------------|
+| Frontend | $0 | $0 |
+| Backend | $0 (Vercel Hobby) | $6/mo (Hetzner CX22) |
+| Postgres | $0–10/mo (Neon free → Pro) | included on VPS |
+| Vapi number | $2/mo | $2/mo |
+| Vapi talk | $0.07/min | $0.07/min |
+| Anthropic / OpenAI | usage-based | usage-based |
+| **Demo monthly** | **~$5–15/mo** | **~$10–25/mo** |
 
 ---
 
-## 8. Going further
+## Troubleshooting
 
-- **Per-business deploys:** copy this stack onto a fresh VPS per customer with their own `.env` and DNS subdomain. Costs ~$10–20/mo per tenant.
-- **Multi-tenant SaaS:** add row-level filtering on `business_id` everywhere + auth (NextAuth.js or django-allauth) + Stripe billing. Out of scope for the OSS today.
-- **Self-host on your own laptop:** the dev `docker-compose.yml` already works. Add `ngrok http 8000` and Vapi can hit your laptop directly for development.
+**Vercel deploy fails — "module not found" in backend**
+→ `backend/api/index.py` adds the backend root to `sys.path` so Django imports resolve. Confirm the file shipped (not in `.gitignore`).
+
+**Postgres connection drops mid-request on Vercel**
+→ Use Neon's **pooled** URL (with `?pgbouncer=true`) not the direct one. Serverless opens fresh connections per invocation.
+
+**"Backend unreachable" in the dashboard**
+→ Verify `INTERNAL_API_URL` and `NEXT_PUBLIC_API_URL` in Vercel env vars. They must include `/api` suffix and match the path your backend is mounted at — `/_/backend/api/` for Path A, `/api/` for Path B.
+
+**Anna says "I'd love to help, but my AI brain isn't connected"**
+→ `ANTHROPIC_API_KEY` not set on the backend service. Add it in Vercel env vars (Path A) or `.env` on VPS (Path B), then redeploy / restart.
+
+**Vapi webhook 502 / 504**
+→ Path A: confirm `maxDuration: 60` in `backend/vercel.json` and your plan supports it. Path B: bump Caddy `request_body max_size` if transcripts are huge.
+
+**Migrations error on first deploy**
+→ Path A: run them locally with `DATABASE_URL=<neon-url>` once. Path B: container automatically migrates on boot — check `docker compose logs backend`.
+
+---
+
+## Going further
+
+- **Per-business deploys (single-tenant):** clone this stack, give each business their own Vercel project + Neon DB + Vapi assistant + DNS subdomain. ~$10–20/mo per tenant.
+- **Multi-tenant SaaS:** add row-level filtering on `business_id`, auth (NextAuth.js or django-allauth), and Stripe billing. Out of scope for this OSS today.
+- **Self-host on your own laptop:** dev `docker-compose.yml` works as-is. `ngrok http 8000` lets Vapi hit your laptop directly.
 
 Questions? Open an issue or [book a call](https://calendly.com/contact-codewithmuh/30min).
