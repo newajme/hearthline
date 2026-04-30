@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -69,6 +70,25 @@ DATABASES = {
     }
 }
 
+# Railway / Heroku style: if DATABASE_URL is provided, use it (overrides individual vars).
+_database_url = os.environ.get("DATABASE_URL")
+if _database_url:
+    try:
+        import dj_database_url  # type: ignore
+        DATABASES["default"] = dj_database_url.parse(_database_url, conn_max_age=600, ssl_require=False)
+    except ImportError:
+        # Lightweight fallback parser if dj_database_url isn't installed.
+        from urllib.parse import urlparse
+        parsed = urlparse(_database_url)
+        DATABASES["default"] = {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": (parsed.path or "/").lstrip("/"),
+            "USER": parsed.username or "",
+            "PASSWORD": parsed.password or "",
+            "HOST": parsed.hostname or "",
+            "PORT": str(parsed.port or 5432),
+        }
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -83,6 +103,10 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -95,11 +119,30 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
+_default_cors = "http://localhost:3000,http://127.0.0.1:3000"
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+    o.strip()
+    for o in os.environ.get("DJANGO_CORS_ALLOWED_ORIGINS", _default_cors).split(",")
+    if o.strip()
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+# Behind a reverse proxy (Railway / Vercel proxy / nginx), trust the X-Forwarded-Proto header.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
+
+# Production hardening (no-op when DEBUG=1)
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+CSRF_TRUSTED_ORIGINS = [
+    o.replace("http://", "https://") if o.startswith("http://") else o
+    for o in CORS_ALLOWED_ORIGINS
+]
 
 # AI
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
