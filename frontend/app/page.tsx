@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import ChatWidget from "./ChatWidget";
+import HeroBackdrop from "./HeroBackdrop";
 import LiveTicker from "./LiveTicker";
 import MockDashboard from "./MockDashboard";
 import PhoneWidget from "./PhoneWidget";
@@ -44,7 +45,8 @@ export default function HomePage() {
 
       <main>
         {/* HERO */}
-        <section className="shell hero">
+        <section className="shell hero hero-illustrated">
+          <HeroBackdrop />
           <span className="hero-meet hero-meet-platform">
             <span className="dot-pulse" aria-hidden />
             <span>For HVAC · Plumbing · Roofing · Solar · Reno</span>
@@ -292,18 +294,18 @@ export default function HomePage() {
           </div>
           <div className="industries-grid industries-grid-wide">
             {[
-              { name: "HVAC & Plumbing", emoji: "🔧", body: "Emergency-call routing 24/7, technician dispatch, maintenance contracts." },
-              { name: "Windows & Doors", emoji: "🪟", body: "Photo quoting, measurement scheduling, installation bookings." },
-              { name: "Solar & Roofing", emoji: "☀️", body: "Roof-type qualification, rebate matching, site-survey coordination." },
-              { name: "Energy Renovation", emoji: "🏠", body: "Insulation audits, subsidy applications, multi-step renovation flows." },
-              { name: "Garage & Shutters", emoji: "🚪", body: "Brand + model identification, repair vs replace triage, after-hours calls." },
-              { name: "Electrical", emoji: "⚡", body: "Emergency vs scheduled job triage, safety-warning scripts, smart-home upsells." },
-              { name: "Landscaping & Pools", emoji: "🌿", body: "Seasonal scheduling, recurring contracts, photo-based estimates." },
-              { name: "Cleaning & Restoration", emoji: "🧽", body: "Damage triage, insurance routing, recurring booking, before/after photos." },
-              { name: "Pest Control", emoji: "🐜", body: "Symptom triage, recurring contracts, neighbour-coverage upsell, follow-ups." },
+              { name: "HVAC & Plumbing", sketch: <SkPipe />, body: "Emergency-call routing 24/7, technician dispatch, maintenance contracts." },
+              { name: "Windows & Doors", sketch: <SkWindow />, body: "Photo quoting, measurement scheduling, installation bookings." },
+              { name: "Solar & Roofing", sketch: <SkSolar />, body: "Roof-type qualification, rebate matching, site-survey coordination." },
+              { name: "Energy Renovation", sketch: <SkInsulation />, body: "Insulation audits, subsidy applications, multi-step renovation flows." },
+              { name: "Garage & Shutters", sketch: <SkGarage />, body: "Brand + model identification, repair vs replace triage, after-hours calls." },
+              { name: "Electrical", sketch: <SkBolt />, body: "Emergency vs scheduled job triage, safety-warning scripts, smart-home upsells." },
+              { name: "Landscaping & Pools", sketch: <SkLeaf />, body: "Seasonal scheduling, recurring contracts, photo-based estimates." },
+              { name: "Cleaning & Restoration", sketch: <SkSpray />, body: "Damage triage, insurance routing, recurring booking, before/after photos." },
+              { name: "Pest Control", sketch: <SkBug />, body: "Symptom triage, recurring contracts, neighbour-coverage upsell, follow-ups." },
             ].map((it) => (
               <div className="industry-card" key={it.name}>
-                <span className="industry-card-emoji" aria-hidden>{it.emoji}</span>
+                <span className="industry-sketch" aria-hidden>{it.sketch}</span>
                 <h3>{it.name}</h3>
                 <p>{it.body}</p>
               </div>
@@ -408,6 +410,104 @@ function Flame() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
       <path d="M8.5 14.5A2.5 2.5 0 0 0 11 17c1.5 0 2.5-.5 3-1.5 1-1.6.6-3.4-1-5-1.6-1.6-2-3.4-1-5C12.5 4 12 3 11 2.5 9.5 2 8 2.5 7 4 5.5 6 5 9 6.5 11c.5 1 .5 2.5-.5 3.5z" />
+    </svg>
+  );
+}
+
+// Hand-drawn sketch icons used on the industry cards.
+const sketchProps = {
+  viewBox: "0 0 64 64",
+  fill: "none" as const,
+  stroke: "currentColor",
+  strokeWidth: 1.8,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+};
+
+function SkPipe() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M6 28h22a8 8 0 0 1 8 8v18" />
+      <rect x="4" y="24" width="6" height="8" rx="1" />
+      <rect x="32" y="52" width="10" height="6" rx="1" />
+      <circle cx="36" cy="36" r="6" />
+      <path d="M36 28v-6M30 36h-4M46 36h-4" />
+    </svg>
+  );
+}
+function SkWindow() {
+  return (
+    <svg {...sketchProps}>
+      <rect x="10" y="8" width="44" height="48" rx="2" />
+      <path d="M10 32h44M32 8v48" />
+      <path d="M14 12h36M14 36h36" strokeOpacity="0.4" />
+    </svg>
+  );
+}
+function SkSolar() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M6 50 L24 14 L52 14 L34 50 Z" />
+      <path d="M16 32 L42 32M22 22 L38 50M30 14 L24 50" />
+      <circle cx="46" cy="10" r="4" />
+      <path d="M46 4v3M46 13v3M40 10h3M52 10h3M42 6l2 2M48 14l2 2" />
+    </svg>
+  );
+}
+function SkInsulation() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M6 22 L32 6 L58 22 L58 58 L6 58 Z" />
+      <path d="M14 30c4 0 4 4 8 4s4-4 8-4 4 4 8 4 4-4 8-4" />
+      <path d="M14 42c4 0 4 4 8 4s4-4 8-4 4 4 8 4 4-4 8-4" />
+      <path d="M14 54h36" />
+    </svg>
+  );
+}
+function SkGarage() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M6 24 L32 8 L58 24 L58 58 L6 58 Z" />
+      <rect x="14" y="32" width="36" height="22" />
+      <path d="M14 40h36M14 47h36M22 32v22M32 32v22M42 32v22" strokeOpacity="0.6" />
+    </svg>
+  );
+}
+function SkBolt() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M30 6 L14 36 L26 36 L20 58 L46 28 L34 28 L40 6 Z" />
+    </svg>
+  );
+}
+function SkLeaf() {
+  return (
+    <svg {...sketchProps}>
+      <path d="M10 54c0-22 18-40 44-44 0 26-18 44-44 44z" />
+      <path d="M14 50 L48 16" />
+      <path d="M22 42q4-2 8-2M28 36q4-2 8-2M34 30q4-2 8-2" strokeOpacity="0.6" />
+    </svg>
+  );
+}
+function SkSpray() {
+  return (
+    <svg {...sketchProps}>
+      <rect x="20" y="16" width="20" height="40" rx="2" />
+      <rect x="22" y="6" width="16" height="10" rx="1" />
+      <path d="M40 18 L52 14 L52 26 L40 22" />
+      <path d="M48 16 L56 14M48 18 L56 18M48 20 L56 22" strokeOpacity="0.5" />
+      <path d="M22 36h16" />
+    </svg>
+  );
+}
+function SkBug() {
+  return (
+    <svg {...sketchProps}>
+      <ellipse cx="32" cy="36" rx="14" ry="18" />
+      <circle cx="32" cy="20" r="6" />
+      <path d="M26 16 L20 8M38 16 L44 8" />
+      <path d="M18 30 L8 26M46 30 L56 26M18 40 L8 40M46 40 L56 40M18 50 L10 56M46 50 L54 56" />
+      <path d="M32 22v32M26 30q6 4 12 0M26 42q6 4 12 0" strokeOpacity="0.5" />
     </svg>
   );
 }

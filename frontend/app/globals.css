@@ -152,8 +152,59 @@ img { max-width: 100%; display: block; }
 .section { padding: 96px 0; }
 .section-tight { padding: 56px 0; }
 
-/* ---- Hero ---- */
-.hero { padding: 88px 0 56px; text-align: center; }
+/* ---- Hero (illustrated backdrop) ---- */
+.hero { padding: 88px 0 56px; text-align: center; position: relative; }
+.hero-illustrated { position: relative; isolation: isolate; }
+.hero-backdrop {
+  position: absolute;
+  inset: -40px 0 -40px 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.hero-illustrated > * { position: relative; z-index: 1; }
+.hero-illustrated .hero-backdrop { z-index: 0; }
+
+/* Subtle blueprint grid */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(10, 10, 10, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(10, 10, 10, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 90%);
+  mask-image: radial-gradient(ellipse at 50% 30%, rgba(0,0,0,1) 0%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0) 90%);
+}
+
+/* Faint architectural cross-section behind the dashboard mock */
+.hero-house {
+  position: absolute;
+  bottom: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(1200px, 110%);
+  color: var(--ink);
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+/* Floating sketch tools */
+.sketch {
+  position: absolute;
+  display: block;
+  color: var(--ink);
+  opacity: 0.07;
+  pointer-events: none;
+  transition: opacity .3s ease;
+}
+.sketch svg { width: 100%; height: 100%; display: block; }
+.hero-illustrated:hover .sketch { opacity: 0.11; }
+
+@media (max-width: 720px) {
+  .sketch { display: none; }
+  .hero-house { opacity: 0.025; }
+}
 .hero-eyebrow {
   display: inline-flex;
   align-items: center;
@@ -1375,6 +1426,27 @@ img { max-width: 100%; display: block; }
   background: var(--surface-2);
   border-radius: 10px;
   margin-bottom: 4px;
+}
+
+/* Hand-drawn sketch icon for industry cards */
+.industry-sketch {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 8px;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.industry-sketch svg { width: 100%; height: 100%; display: block; }
+.industry-card:hover .industry-sketch {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
 }
 .industry-card h3 {
   margin: 0;
