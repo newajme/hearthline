@@ -3,6 +3,8 @@ import Link from "next/link";
 import { fetchJson, fmtAge, fmtMoney, type Lead, type Page } from "../lib";
 import { LeadActionPill } from "../parts";
 
+const STATUSES = ["all", "new", "qualifying", "quoted", "booked", "won", "lost"];
+
 export default async function LeadsPage({
   searchParams,
 }: {
@@ -12,9 +14,7 @@ export default async function LeadsPage({
   const data = await fetchJson<Page<Lead>>("/leads/");
   let leads = data?.results ?? [];
 
-  if (params.status) {
-    leads = leads.filter((l) => l.status === params.status);
-  }
+  if (params.status) leads = leads.filter((l) => l.status === params.status);
   if (params.q) {
     const q = params.q.toLowerCase();
     leads = leads.filter(
@@ -26,8 +26,6 @@ export default async function LeadsPage({
     );
   }
 
-  const statuses = ["all", "new", "qualifying", "quoted", "booked", "won", "lost"];
-
   return (
     <>
       <div className="app-pagebar">
@@ -36,7 +34,6 @@ export default async function LeadsPage({
           <p>Every inbound captured and qualified by Hearthline.</p>
         </div>
         <div className="app-pagebar-actions">
-          <a href="http://localhost:8000/admin/leads/lead/" target="_blank" rel="noreferrer" className="btn btn-ghost">Open in admin ↗</a>
           <a href="http://localhost:8000/admin/leads/lead/add/" target="_blank" rel="noreferrer" className="btn btn-primary">+ New lead</a>
         </div>
       </div>
@@ -50,51 +47,47 @@ export default async function LeadsPage({
             placeholder="Search by name, phone, email, summary…"
             className="search-input"
           />
-          <div className="tag-row" style={{ marginBottom: 0 }}>
-            {statuses.map((s) => {
+          <div className="tag-row" style={{ display: "flex" }}>
+            {STATUSES.map((s) => {
               const active = (params.status ?? "all") === s;
               const href = s === "all" ? "/dashboard/leads" : `/dashboard/leads?status=${s}`;
               return (
-                <Link key={s} href={href} className={`tag-chip ${active ? "active" : ""}`} style={{ textDecoration: "none" }}>
+                <Link key={s} href={href} className={`tag-chip ${active ? "active" : ""}`}>
                   {s}
                 </Link>
               );
             })}
           </div>
-          <button type="submit" className="btn btn-ghost" style={{ marginLeft: "auto" }}>Apply</button>
         </form>
 
         <section className="app-table">
-          <div className="mock-thead">
-            <span>Contact</span>
-            <span>AI Assistant</span>
-            <span>Activity</span>
+          <div className="app-table-head">
+            <span>Customer</span>
+            <span>Project</span>
+            <span>Value</span>
             <span style={{ textAlign: "right" }}>Status</span>
           </div>
           {leads.length === 0 ? (
-            <div className="empty-card" style={{ borderRadius: 0, border: "none" }}>
+            <div className="empty-card" style={{ borderRadius: 0, border: "none", background: "white" }}>
               <h3>No leads match these filters</h3>
-              <p>Try clearing the filters or seed demo data with <code>docker compose exec backend python manage.py seed_demo</code>.</p>
+              <p>Clear filters or seed demo data with <code>seed_demo</code>.</p>
             </div>
           ) : (
             leads.map((lead) => (
-              <Link href={`/dashboard/leads/${lead.id}`} key={lead.id} className="mock-row" style={{ borderRadius: 0, textDecoration: "none", color: "inherit" }}>
-                <div className="mock-contact">
-                  <span className="mock-msg-icon" aria-hidden>💬</span>
+              <Link href={`/dashboard/leads/${lead.id}`} key={lead.id} className="app-table-row">
+                <div className="app-row-customer">
+                  <span className="app-row-avatar">{(lead.customer?.name || "?").slice(0, 1).toUpperCase()}</span>
                   <div>
-                    <div className="mock-contact-name">{lead.customer?.name || "Unknown"}</div>
-                    <div className="mock-contact-sub">{lead.customer?.phone || lead.customer?.email || "—"}</div>
+                    <div className="app-row-title">{lead.customer?.name || "Unknown"}</div>
+                    <div className="app-row-sub">{lead.customer?.phone || lead.customer?.email || "—"}</div>
                   </div>
                 </div>
-                <div className="mock-assist">
-                  <span className="mock-assist-avatar">A</span>
-                  <span>Anna</span>
-                </div>
                 <div>
-                  <div className="mock-activity-text">{lead.project_summary || "(no summary)"}</div>
-                  <div className="mock-activity-age">{fmtAge(lead.created_at)} · {lead.temperature} · est {fmtMoney(lead.estimated_value)}</div>
+                  <div className="app-row-title app-row-title-soft">{lead.project_summary || "(no summary)"}</div>
+                  <div className="app-row-sub">{fmtAge(lead.created_at)} · {lead.temperature}</div>
                 </div>
-                <div className="mock-action">
+                <div className="app-row-value">{fmtMoney(lead.estimated_value)}</div>
+                <div className="app-row-action">
                   <LeadActionPill lead={lead} />
                 </div>
               </Link>

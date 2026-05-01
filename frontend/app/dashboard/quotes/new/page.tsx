@@ -1,11 +1,12 @@
-import { fetchJson, type Lead, type Page } from "../../lib";
+import { fetchJson, type Business, type Lead, type Page } from "../../lib";
 import NewQuoteForm from "./NewQuoteForm";
 
 export default async function NewQuotePage() {
-  const data = await fetchJson<Page<Lead>>("/leads/");
-  const leads = (data?.results ?? []).map((l) => ({
-    id: l.id,
-    label: `#${l.id} · ${l.customer?.name || l.customer?.phone || "Unknown"} — ${l.project_summary || "(no summary)"}`,
-  }));
-  return <NewQuoteForm leads={leads} />;
+  const [leadsRes, businessesRes] = await Promise.all([
+    fetchJson<Page<Lead>>("/leads/"),
+    fetchJson<Page<Business>>("/businesses/"),
+  ]);
+  const leads = leadsRes?.results ?? [];
+  const business = businessesRes?.results?.[0] ?? null;
+  return <NewQuoteForm leads={leads} business={business} />;
 }

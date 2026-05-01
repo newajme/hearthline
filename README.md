@@ -84,11 +84,28 @@ docker compose up --build
 #   http://localhost:8000/api    REST API
 ```
 
-Seed the dashboard with believable demo data:
+Seed the dashboard with believable demo data and a default admin login:
 
 ```bash
 docker compose exec backend python manage.py seed_demo --wipe
+docker compose exec backend python manage.py seed_admin
+# Default credentials: admin / hearthline — override with HEARTHLINE_ADMIN_PASSWORD
 ```
+
+The dashboard is gated. Sign in at `http://localhost:3000/login`, then you can
+reach `/dashboard`. The marketing site at `/` has no admin links and exposes a
+single **Sign in** entry point.
+
+**Configure your business from the dashboard, not Django admin.** At
+`/dashboard/settings` you can edit:
+- Business profile (name, phone, AI persona, trade, timezone)
+- AI knowledge base (Anna reads this on every call)
+- Provider API keys (Anthropic / OpenAI / Vapi / Twilio) — per-business with
+  env-var fallback. Stored masked; "Show" reveals only the value you paste.
+- Channels (phone / SMS / WhatsApp / email / chat) — add, toggle, remove.
+
+`HEARTHLINE_ADMIN_*` env vars only seed the first login user; everything else
+is data-driven and editable in the UI.
 
 ## Deploying
 

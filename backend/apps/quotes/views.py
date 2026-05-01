@@ -1,5 +1,5 @@
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,13 +13,13 @@ from .serializers import QuoteSerializer
 class QuoteList(generics.ListCreateAPIView):
     queryset = Quote.objects.all().order_by("-created_at")
     serializer_class = QuoteSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class QuoteDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quote.objects.all()
     serializer_class = QuoteSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 class PhotoQuote(APIView):
@@ -29,7 +29,7 @@ class PhotoQuote(APIView):
     a real PDF estimate from a single phone photo.
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         photo_url = request.data.get("photo_url")

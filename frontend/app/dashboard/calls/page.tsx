@@ -1,15 +1,14 @@
 import Link from "next/link";
 
 import { fetchJson, fmtAge, type Call, type Page } from "../lib";
+import { StatusPill } from "../parts";
 
 export default async function CallsPage({ searchParams }: { searchParams: Promise<{ provider?: string; q?: string }> }) {
   const params = await searchParams;
   const data = await fetchJson<Page<Call>>("/calls/");
   let calls = data?.results ?? [];
 
-  if (params.provider) {
-    calls = calls.filter((c) => c.provider === params.provider);
-  }
+  if (params.provider) calls = calls.filter((c) => c.provider === params.provider);
   if (params.q) {
     const q = params.q.toLowerCase();
     calls = calls.filter(
@@ -28,11 +27,10 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
       <div className="app-pagebar">
         <div>
           <h1>Calls</h1>
-          <p>Every voice + SMS interaction logged from Vapi and Twilio.</p>
+          <p>Voice and SMS interactions captured by Anna.</p>
         </div>
         <div className="app-pagebar-actions">
-          <a href="http://localhost:8000/admin/calls/call/" target="_blank" rel="noreferrer" className="btn btn-ghost">Open in admin ↗</a>
-          <a href="http://localhost:8000/api/calls/" target="_blank" rel="noreferrer" className="btn btn-primary">View raw API</a>
+          <Link href="/dashboard/test-call" className="btn btn-primary">▶ Test Anna</Link>
         </div>
       </div>
 
@@ -60,52 +58,50 @@ export default async function CallsPage({ searchParams }: { searchParams: Promis
             placeholder="Search transcripts, numbers, summaries…"
             className="search-input"
           />
-          <div className="tag-row" style={{ marginBottom: 0 }}>
+          <div className="tag-row" style={{ display: "flex" }}>
             {["all", "vapi", "twilio"].map((p) => {
               const active = (params.provider ?? "all") === p;
               const href = p === "all" ? "/dashboard/calls" : `/dashboard/calls?provider=${p}`;
               return (
-                <Link key={p} href={href} className={`tag-chip ${active ? "active" : ""}`} style={{ textDecoration: "none" }}>
+                <Link key={p} href={href} className={`tag-chip ${active ? "active" : ""}`}>
                   {p}
                 </Link>
               );
             })}
           </div>
-          <button type="submit" className="btn btn-ghost" style={{ marginLeft: "auto" }}>Apply</button>
         </form>
 
-        <section className="dash-card" style={{ padding: 0 }}>
-          <div className="mock-thead" style={{ borderRadius: 0, borderTop: "none" }}>
+        <section className="app-table">
+          <div className="app-table-head cols-calls">
             <span>Caller</span>
             <span>Provider</span>
             <span>Summary</span>
             <span style={{ textAlign: "right" }}>Status</span>
           </div>
           {calls.length === 0 ? (
-            <div className="empty-card" style={{ borderRadius: 0, border: "none" }}>
+            <div className="empty-card" style={{ borderRadius: 0, border: "none", background: "white" }}>
               <h3>No calls match these filters</h3>
               <p>Wire a Vapi or Twilio webhook to <code>/api/calls/webhooks/vapi/</code>.</p>
             </div>
           ) : (
             calls.map((c) => (
-              <div key={c.id} className="mock-row" style={{ borderRadius: 0 }}>
-                <div className="mock-contact">
-                  <span className="mock-msg-icon" aria-hidden>📞</span>
+              <div key={c.id} className="app-table-row cols-calls">
+                <div className="app-row-customer">
+                  <span className="app-row-avatar" style={{ fontSize: 14 }}>📞</span>
                   <div>
-                    <div className="mock-contact-name">{c.from_number || "unknown"}</div>
-                    <div className="mock-contact-sub">→ {c.to_number || "—"}</div>
+                    <div className="app-row-title">{c.from_number || "unknown"}</div>
+                    <div className="app-row-sub">→ {c.to_number || "—"}</div>
                   </div>
                 </div>
-                <div className="mock-assist"><span className="tag">{c.provider}</span></div>
+                <div><span className="tag" style={{ marginLeft: 0 }}>{c.provider}</span></div>
                 <div>
-                  <div className="mock-activity-text">{c.summary || (c.transcript ? c.transcript.slice(0, 160) + "…" : "(no transcript)")}</div>
-                  <div className="mock-activity-age">{fmtAge(c.started_at)} · {c.duration_seconds ? `${c.duration_seconds}s` : "—"}</div>
+                  <div className="app-row-title app-row-title-soft">
+                    {c.summary || (c.transcript ? c.transcript.slice(0, 160) + "…" : "(no transcript)")}
+                  </div>
+                  <div className="app-row-sub">{fmtAge(c.started_at)} · {c.duration_seconds ? `${c.duration_seconds}s` : "—"}</div>
                 </div>
-                <div className="mock-action">
-                  <span className={`action-pill ${c.status === "completed" ? "won" : "status"}`}>
-                    <span className="action-dot" style={{ background: c.status === "completed" ? "#16a34a" : "#6b7280" }} />
-                    {c.status}
-                  </span>
+                <div className="app-row-action">
+                  <StatusPill status={c.status} />
                 </div>
               </div>
             ))

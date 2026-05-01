@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { fetchJson, fmtAge, fmtMoney, type Lead, type Page } from "../lib";
 
 type CustomerRow = {
@@ -57,10 +55,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       <div className="app-pagebar">
         <div>
           <h1>Customers</h1>
-          <p>Everyone who has ever touched a Hearthline channel.</p>
+          <p>Everyone who has touched a Hearthline channel.</p>
         </div>
         <div className="app-pagebar-actions">
-          <a href="http://localhost:8000/admin/leads/customer/" target="_blank" rel="noreferrer" className="btn btn-ghost">Open in admin ↗</a>
           <a href="http://localhost:8000/admin/leads/customer/add/" target="_blank" rel="noreferrer" className="btn btn-primary">+ New customer</a>
         </div>
       </div>
@@ -74,10 +71,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
             placeholder="Search by name, phone, email…"
             className="search-input"
           />
-          <button type="submit" className="btn btn-ghost">Search</button>
         </form>
 
-        <section className="dash-card" style={{ padding: 0 }}>
+        <section className="app-table">
           <table className="lineitems">
             <thead>
               <tr>
@@ -99,12 +95,22 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
               ) : (
                 customers.map((c) => (
                   <tr key={c.id}>
-                    <td><strong>{c.name || "Unknown"}</strong></td>
-                    <td>{c.phone}<br /><span style={{ color: "var(--muted)", fontSize: 12 }}>{c.email}</span></td>
+                    <td>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <span className="app-row-avatar" style={{ width: 30, height: 30, fontSize: 12 }}>
+                          {(c.name || "?").slice(0, 1).toUpperCase()}
+                        </span>
+                        <strong style={{ color: "var(--ink)" }}>{c.name || "Unknown"}</strong>
+                      </div>
+                    </td>
+                    <td>
+                      <div style={{ fontSize: 13 }}>{c.phone}</div>
+                      <div style={{ color: "var(--muted)", fontSize: 12 }}>{c.email}</div>
+                    </td>
                     <td style={{ color: "var(--muted)", fontSize: 13 }}>{c.address || "—"}</td>
                     <td className="num">{c.leadCount}</td>
                     <td className="num"><strong>{fmtMoney(c.totalValue)}</strong></td>
-                    <td style={{ color: "var(--muted)" }}>{fmtAge(c.lastSeen)}</td>
+                    <td style={{ color: "var(--muted)", fontSize: 12.5 }}>{fmtAge(c.lastSeen)}</td>
                   </tr>
                 ))
               )}

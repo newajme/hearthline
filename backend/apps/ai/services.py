@@ -26,26 +26,36 @@ CLAUDE_MODEL = "claude-sonnet-4-6"
 OPENAI_VISION_MODEL = "gpt-4o-mini"
 
 
-def _claude_client():
-    if not settings.ANTHROPIC_API_KEY:
+def _resolve_business():
+    """Get the active business — single-tenant for now, first row wins."""
+    from apps.core.models import Business
+    return Business.objects.first()
+
+
+def _claude_client(business=None):
+    biz = business or _resolve_business()
+    key = (biz.resolved_anthropic_key if biz else "") or settings.ANTHROPIC_API_KEY
+    if not key:
         return None
     try:
         import anthropic  # noqa: WPS433
     except ImportError:
         logger.warning("anthropic SDK not installed")
         return None
-    return anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+    return anthropic.Anthropic(api_key=key)
 
 
-def _openai_client():
-    if not settings.OPENAI_API_KEY:
+def _openai_client(business=None):
+    biz = business or _resolve_business()
+    key = (biz.resolved_openai_key if biz else "") or settings.OPENAI_API_KEY
+    if not key:
         return None
     try:
         import openai  # noqa: WPS433
     except ImportError:
         logger.warning("openai SDK not installed")
         return None
-    return openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+    return openai.OpenAI(api_key=key)
 
 
 # ---------------------------------------------------------------------------
@@ -77,7 +87,7 @@ def extract_lead_from_transcript(transcript: str, business=None) -> dict[str, An
     if not transcript.strip():
         return _empty_extract()
 
-    client = _claude_client()
+    client = _claude_client(business)
     if not client:
         logger.info("ANTHROPIC_API_KEY missing — returning stub lead extract")
         return _empty_extract()
@@ -144,7 +154,7 @@ Return ONLY the JSON. No prose, no code fences."""
 
 def draft_quote_from_photo(photo_url: str, lead=None) -> dict[str, Any]:
     """Take a photo URL → a structured quote draft."""
-    raw = _vision_quote(photo_url)
+    raw = _vision_quote(photo_url, getattr(lead, "business", None))
     if not raw:
         # Stub so endpoint stays usable when no API key is set
         raw = _stub_quote()
@@ -181,8 +191,8 @@ def draft_quote_from_photo(photo_url: str, lead=None) -> dict[str, Any]:
     }
 
 
-def _vision_quote(photo_url: str) -> dict[str, Any] | None:
-    client = _openai_client()
+def _vision_quote(photo_url: str, business=None) -> dict[str, Any] | None:
+    client = _openai_client(business)
     if not client:
         return None
     try:

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import { fetchJson, type Business, type Page, type Quote } from "../../lib";
+import { fetchJson, type Business, type Lead, type Page, type Quote } from "../../lib";
 import QuoteEditor from "./QuoteEditor";
 
 export default async function QuoteDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -10,6 +10,8 @@ export default async function QuoteDetailPage({ params }: { params: Promise<{ id
     fetchJson<Page<Business>>("/businesses/"),
   ]);
   if (!quote) notFound();
-  const businessName = businesses?.results?.[0]?.name ?? "Hearthline";
-  return <QuoteEditor quote={quote} businessName={businessName} />;
+  const business = businesses?.results?.[0] ?? null;
+  // Pull the lead so we can show customer info on the invoice.
+  const lead = await fetchJson<Lead>(`/leads/${quote.lead}/`);
+  return <QuoteEditor quote={quote} business={business} lead={lead} />;
 }

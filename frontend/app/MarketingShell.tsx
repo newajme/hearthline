@@ -14,11 +14,10 @@ export function MarketingTopbar() {
           <Link href="/#features" className="nav-link">Features</Link>
           <Link href="/#industries" className="nav-link">Industries</Link>
           <Link href="/faq" className="nav-link">FAQ</Link>
-          <Link href="/dashboard" className="nav-link">Dashboard</Link>
           <Link href="/docs" className="nav-link">Docs</Link>
         </nav>
         <div className="topbar-right">
-          <Link href="/dashboard" className="btn btn-ghost">Log in</Link>
+          <Link href="/login" className="btn btn-ghost">Sign in</Link>
           <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-primary">Book a demo</a>
         </div>
       </header>
@@ -42,7 +41,7 @@ export function MarketingFooter() {
         <h5>Product</h5>
         <Link href="/#features">Features</Link>
         <Link href="/#industries">Industries</Link>
-        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/login">Sign in</Link>
       </div>
       <div className="footer-col">
         <h5>Resources</h5>

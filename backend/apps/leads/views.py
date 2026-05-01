@@ -1,5 +1,5 @@
 from rest_framework import filters, generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Lead
 from .serializers import LeadSerializer
@@ -8,7 +8,7 @@ from .serializers import LeadSerializer
 class LeadList(generics.ListCreateAPIView):
     queryset = Lead.objects.all().select_related("customer", "business").order_by("-created_at")
     serializer_class = LeadSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     filter_backends = [filters.SearchFilter]
     search_fields = ["project_summary", "customer__name", "customer__phone"]
 
@@ -16,4 +16,4 @@ class LeadList(generics.ListCreateAPIView):
 class LeadDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Lead.objects.all().select_related("customer", "business")
     serializer_class = LeadSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]

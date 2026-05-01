@@ -21,12 +21,7 @@ from apps.quotes.models import LineItem, Quote
 
 CUSTOMERS = [
     ("Mark Johnson", "+1 (555) 777-8888", "mark.johnson@example.com", "1820 Oak St, Sacramento, CA"),
-    ("Alice Smith", "+1 (555) 612-1109", "alice@example.com", "44 Maple Ave, Berkeley, CA"),
     ("David Chen", "+1 (555) 333-9999", "david.chen@example.com", "207 Pine Ridge Dr, Oakland, CA"),
-    ("Sara Patel", "+1 (555) 220-4416", "sara.patel@example.com", "9 Elm Ct, Walnut Creek, CA"),
-    ("Liam Bauer", "+1 (555) 221-7430", "liam@bauerhomes.io", "1133 Cedar Ln, San Jose, CA"),
-    ("Emma Walsh", "+1 (555) 901-3382", "emma@walshroofing.io", "651 Hillside Rd, Palo Alto, CA"),
-    ("Diego Ruiz", "+1 (555) 991-3340", "diego.ruiz@example.com", "78 Sunset Blvd, San Mateo, CA"),
     ("Olivia Park", "+1 (555) 803-2240", "olivia@bayhvac.com", "320 Bayshore Ave, Redwood City, CA"),
 ]
 
@@ -53,41 +48,6 @@ LEADS = [
         "value": 12300,
         "extracted": {"trade": "hvac", "units": 1, "addons": ["thermostat"], "urgency": "this_week"},
     },
-    {
-        "summary": "Status check on order #5521 — windows pending delivery.",
-        "status": "qualifying",
-        "temp": "warm",
-        "value": None,
-        "extracted": {"trade": "windows", "type": "support", "order_id": "5521"},
-    },
-    {
-        "summary": "Solar panels — wants subsidy eligibility before signing.",
-        "status": "quoted",
-        "temp": "warm",
-        "value": 18750,
-        "extracted": {"trade": "solar", "subsidy_check": True},
-    },
-    {
-        "summary": "Garage door repair — motorised, schedule needed Saturday.",
-        "status": "booked",
-        "temp": "hot",
-        "value": 380,
-        "extracted": {"trade": "doors", "type": "repair", "urgency": "this_week"},
-    },
-    {
-        "summary": "Drain backing up after Tuesday's plumbing visit. Needs follow-up.",
-        "status": "qualifying",
-        "temp": "hot",
-        "value": None,
-        "extracted": {"trade": "plumbing", "type": "follow_up"},
-    },
-    {
-        "summary": "Insulation upgrade for energy-renovation rebate program.",
-        "status": "new",
-        "temp": "cold",
-        "value": 6200,
-        "extracted": {"trade": "renovation", "subsidy_check": True},
-    },
 ]
 
 
@@ -112,20 +72,6 @@ CALLS = [
         "summary": "B2B enquiry — wholesale AC unit pricing. Routed to commercial team.",
         "status": "completed",
         "duration": 96,
-    },
-    {
-        "from": "+15552207430",
-        "transcript": "",
-        "summary": "",
-        "status": "no_answer",
-        "duration": 0,
-    },
-    {
-        "from": "+15556121109",
-        "transcript": "Hi, this is Alice Smith — when will my windows be delivered? Order number is 5521.",
-        "summary": "Status enquiry — order #5521. Confirmed delivery scheduled for next Tuesday.",
-        "status": "completed",
-        "duration": 64,
     },
 ]
 
@@ -163,17 +109,6 @@ QUOTES = [
         ],
         "notes": "Includes haul-away of existing unit and rebate paperwork submission.",
         "status": "accepted",
-    },
-    {
-        "ref": "HL-D2A841",
-        "lead_idx": 4,
-        "items": [
-            ("Solar PV 6 kW system + inverter", 1, 14200),
-            ("Roof mounting + electrical", 1, 3200),
-            ("Permitting + interconnect", 1, 1350),
-        ],
-        "notes": "State rebate of $2,400 to be applied at acceptance. ITC eligible.",
-        "status": "viewed",
     },
 ]
 

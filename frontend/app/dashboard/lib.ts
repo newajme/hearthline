@@ -1,17 +1,12 @@
-export const API_URL =
-  process.env.INTERNAL_API_URL ??
-  process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:8000/api";
+import { apiFetch, apiJson, API_URL as SHARED_API_URL } from "@/app/lib/api";
+
+export const API_URL = SHARED_API_URL;
 
 export async function fetchJson<T>(path: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
+  return apiJson<T>(path);
 }
+
+export { apiFetch };
 
 export function fmtAge(iso: string | null | undefined): string {
   if (!iso) return "";
@@ -85,6 +80,19 @@ export type Business = {
   phone_number: string;
   voice_persona: string;
   knowledge_base: string;
+  // Masked secrets — show only ••••XXXX or "" when unset.
+  anthropic_api_key: string;
+  openai_api_key: string;
+  vapi_api_key: string;
+  vapi_phone_number_id: string;
+  twilio_account_sid: string;
+  twilio_auth_token: string;
+  twilio_from_number: string;
+  // Booleans — true if a key is configured (per-business OR env fallback).
+  has_anthropic_key: boolean;
+  has_openai_key: boolean;
+  has_vapi_key: boolean;
+  has_twilio_creds: boolean;
   channels: Array<{ id: number; kind: string; address: string; is_active: boolean }>;
 };
 

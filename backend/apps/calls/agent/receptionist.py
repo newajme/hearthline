@@ -20,12 +20,13 @@ logger = logging.getLogger(__name__)
 CLAUDE_MODEL = "claude-sonnet-4-6"
 
 
-def _client():
-    if not settings.ANTHROPIC_API_KEY:
+def _client(business=None):
+    key = (business.resolved_anthropic_key if business else "") or settings.ANTHROPIC_API_KEY
+    if not key:
         return None
     try:
         import anthropic  # noqa: WPS433
-        return anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+        return anthropic.Anthropic(api_key=key)
     except ImportError:
         logger.warning("anthropic SDK not installed")
         return None
@@ -68,7 +69,7 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
             f"contact unless they ask you to use a different number."
         )
 
-    client = _client()
+    client = _client(biz)
     if not client:
         # Stub — useful for local dev without API keys
         return {

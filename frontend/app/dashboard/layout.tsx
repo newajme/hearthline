@@ -1,4 +1,8 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+
+import { apiFetch, getCurrentUser } from "@/app/lib/api";
+
 import Sidebar from "./Sidebar";
 import { DashGlobalTopbar } from "./Topbar";
 
@@ -6,14 +10,9 @@ export const metadata: Metadata = {
   title: "Hearthline · Dashboard",
 };
 
-const API_URL =
-  process.env.INTERNAL_API_URL ??
-  process.env.NEXT_PUBLIC_API_URL ??
-  "http://localhost:8000/api";
-
 async function fetchCount(path: string): Promise<number> {
   try {
-    const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
+    const res = await apiFetch(path);
     if (!res.ok) return 0;
     const data = await res.json();
     return data?.count ?? 0;
@@ -23,6 +22,9 @@ async function fetchCount(path: string): Promise<number> {
 }
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login?next=/dashboard");
+
   const [leads, calls, quotes, businesses] = await Promise.all([
     fetchCount("/leads/"),
     fetchCount("/calls/"),
@@ -33,7 +35,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
     <div className="app-shell">
       <Sidebar counts={{ leads, calls, quotes, businesses }} />
       <div className="app-main">
-        <DashGlobalTopbar />
+        <DashGlobalTopbar user={user} />
         {children}
       </div>
     </div>

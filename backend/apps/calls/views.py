@@ -10,7 +10,7 @@ from django.http import JsonResponse, StreamingHttpResponse
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 class CallList(generics.ListAPIView):
     queryset = Call.objects.all().order_by("-started_at")
     serializer_class = CallSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 def _openai_to_claude(messages: list) -> list:

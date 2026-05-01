@@ -1,14 +1,23 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function DashGlobalTopbar() {
+type SessionUser = {
+  id: number;
+  username: string;
+  email: string;
+  first_name: string;
+  is_staff: boolean;
+};
+
+export function DashGlobalTopbar({ user }: { user: SessionUser }) {
   return (
     <div className="dash-global-topbar">
       <DashSearch />
       <div className="dash-topbar-right">
         <DashBell />
-        <DashUser />
+        <DashUser user={user} />
       </div>
     </div>
   );
@@ -49,7 +58,7 @@ function DashBell() {
           <span className="dash-pop-overlay" onClick={() => setOpen(false)} />
           <div className="dash-pop-menu">
             <div className="dash-pop-head">Notifications</div>
-            <div className="dash-pop-empty">You're all caught up.</div>
+            <div className="dash-pop-empty">You&apos;re all caught up.</div>
           </div>
         </>
       )}
@@ -57,15 +66,38 @@ function DashBell() {
   );
 }
 
-function DashUser() {
+function initials(user: SessionUser): string {
+  const src = (user.first_name || user.username || user.email || "U").trim();
+  const parts = src.split(/[\s._-]+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return src.slice(0, 2).toUpperCase();
+}
+
+function DashUser({ user }: { user: SessionUser }) {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function signOut() {
+    setSigningOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {
+      /* ignore — we still redirect */
+    }
+    router.push("/");
+    router.refresh();
+  }
+
+  const display = user.first_name || user.username || user.email;
+
   return (
     <div className="dash-pop">
       <button className="dash-user-btn" onClick={() => setOpen((o) => !o)}>
-        <span className="dash-user-avatar">JD</span>
+        <span className="dash-user-avatar">{initials(user)}</span>
         <span className="dash-user-meta">
-          <span className="dash-user-name">Jordan Davis</span>
-          <span className="dash-user-role">Owner · Rolling Shutters</span>
+          <span className="dash-user-name">{display}</span>
+          <span className="dash-user-role">{user.is_staff ? "Admin" : "Member"}</span>
         </span>
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="6 9 12 15 18 9" /></svg>
       </button>
@@ -73,11 +105,29 @@ function DashUser() {
         <>
           <span className="dash-pop-overlay" onClick={() => setOpen(false)} />
           <div className="dash-pop-menu dash-pop-menu-right">
+            <div className="dash-pop-head" style={{ fontWeight: 600 }}>{user.email || user.username}</div>
             <a href="/dashboard/settings" className="dash-pop-item">Settings</a>
             <a href="/dashboard/customers" className="dash-pop-item">Customers</a>
-            <a href="http://localhost:8000/admin/" target="_blank" rel="noreferrer" className="dash-pop-item">Django admin ↗</a>
+            {user.is_staff && (
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}`.replace(/\/api\/?$/, "") + "/admin/"}
+                target="_blank"
+                rel="noreferrer"
+                className="dash-pop-item"
+              >
+                Django admin ↗
+              </a>
+            )}
             <hr />
             <a href="/" className="dash-pop-item">← Back to landing</a>
+            <button
+              type="button"
+              className="dash-pop-item dash-pop-item-danger"
+              onClick={signOut}
+              disabled={signingOut}
+            >
+              {signingOut ? "Signing out…" : "Sign out"}
+            </button>
           </div>
         </>
       )}

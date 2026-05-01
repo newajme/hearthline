@@ -45,11 +45,11 @@ export default function HomePage() {
             <Link href="#features" className="nav-link">Features</Link>
             <Link href="#workflow" className="nav-link">How it works</Link>
             <Link href="#impact" className="nav-link">Impact</Link>
-            <Link href="/dashboard" className="nav-link">Dashboard</Link>
+            <Link href="#industries" className="nav-link">Industries</Link>
             <Link href="/docs" className="nav-link">Docs</Link>
           </nav>
           <div className="topbar-right">
-            <Link href="/dashboard" className="btn btn-ghost">Log in</Link>
+            <Link href="/login" className="btn btn-ghost">Sign in</Link>
             <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-primary">Book a demo</a>
           </div>
         </header>
@@ -76,7 +76,7 @@ export default function HomePage() {
             <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
               Book a demo <span aria-hidden>→</span>
             </a>
-            <Link href="/dashboard" className="btn btn-ghost">See the live dashboard</Link>
+            <Link href="/login" className="btn btn-ghost">Sign in to dashboard</Link>
           </div>
 
           <LiveTicker />
@@ -305,8 +305,8 @@ export default function HomePage() {
               <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-onDark btn-lg">
                 Book a demo <span aria-hidden>→</span>
               </a>
-              <Link href="/dashboard" className="btn btn-onDark-ghost">
-                See the live dashboard
+              <Link href="/login" className="btn btn-onDark-ghost">
+                Sign in
               </Link>
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function HomePage() {
             <h5>Product</h5>
             <a href="#features">Features</a>
             <a href="#industries">Industries</a>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/login">Sign in</Link>
           </div>
           <div className="footer-col">
             <h5>Resources</h5>

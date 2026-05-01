@@ -66,7 +66,7 @@ export default function DocsPage() {
             <Link href="#flow" className="nav-link">Pipeline</Link>
             <Link href="#run" className="nav-link">Quick start</Link>
             <Link href="#roadmap" className="nav-link">Roadmap</Link>
-            <Link href="/dashboard" className="nav-link">Dashboard</Link>
+            <Link href="/login" className="nav-link">Sign in</Link>
           </nav>
           <div className="topbar-right">
             <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-ghost gh-btn">
@@ -255,8 +255,8 @@ docker compose up --build
               <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-onDark">
                 <Github /> Clone on GitHub
               </a>
-              <Link href="/dashboard" className="btn btn-onDark-ghost">
-                Open the live dashboard
+              <Link href="/login" className="btn btn-onDark-ghost">
+                Sign in to dashboard
               </Link>
             </div>
           </div>

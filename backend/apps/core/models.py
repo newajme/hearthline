@@ -25,6 +25,16 @@ class Business(models.Model):
         blank=True,
         help_text="Pricing rules, FAQ, service area — fed to the LLM as system prompt context",
     )
+
+    # Provider credentials. When set, override the global env-var defaults.
+    anthropic_api_key = models.CharField(max_length=255, blank=True, default="")
+    openai_api_key = models.CharField(max_length=255, blank=True, default="")
+    vapi_api_key = models.CharField(max_length=255, blank=True, default="")
+    vapi_phone_number_id = models.CharField(max_length=128, blank=True, default="")
+    twilio_account_sid = models.CharField(max_length=128, blank=True, default="")
+    twilio_auth_token = models.CharField(max_length=255, blank=True, default="")
+    twilio_from_number = models.CharField(max_length=32, blank=True, default="")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -33,6 +43,36 @@ class Business(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+    # ---- Resolved credentials (per-business override → global env fallback) ----
+
+    def _resolved(self, attr: str, env_attr: str) -> str:
+        from django.conf import settings as dj_settings
+        return (getattr(self, attr) or "").strip() or getattr(dj_settings, env_attr, "") or ""
+
+    @property
+    def resolved_anthropic_key(self) -> str:
+        return self._resolved("anthropic_api_key", "ANTHROPIC_API_KEY")
+
+    @property
+    def resolved_openai_key(self) -> str:
+        return self._resolved("openai_api_key", "OPENAI_API_KEY")
+
+    @property
+    def resolved_vapi_key(self) -> str:
+        return self._resolved("vapi_api_key", "VAPI_API_KEY")
+
+    @property
+    def resolved_twilio_sid(self) -> str:
+        return self._resolved("twilio_account_sid", "TWILIO_ACCOUNT_SID")
+
+    @property
+    def resolved_twilio_token(self) -> str:
+        return self._resolved("twilio_auth_token", "TWILIO_AUTH_TOKEN")
+
+    @property
+    def resolved_twilio_from(self) -> str:
+        return self._resolved("twilio_from_number", "TWILIO_FROM_NUMBER")
 
 
 class Channel(models.Model):
