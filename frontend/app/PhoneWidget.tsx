@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import { Anna } from "./Anna";
+
 const TRANSCRIPT: Array<{ role: "in" | "out"; text: string; afterMs: number }> = [
   { role: "in", text: "Hello, I'd like to schedule a repair for my garage door.", afterMs: 700 },
   { role: "out", text: "I can help with that. Is it a motorised or manual door?", afterMs: 2400 },
@@ -50,6 +52,10 @@ export default function PhoneWidget() {
         </div>
         <div className="phone-title">Incoming Call</div>
         <div className="phone-num">+1 (000) 123-4567</div>
+        <div className="phone-anna">
+          <Anna />
+          <span>Anna · Hearthline front desk</span>
+        </div>
         <div className="phone-call-actions">
           <div className="phone-action">
             <button className="phone-action-btn decline" aria-label="Decline call">
@@ -71,7 +77,7 @@ export default function PhoneWidget() {
         <div className="phone-feed-status">
           <span className="phone-feed-pulse">
             <span className="dot-pulse" />
-            AI Answering…
+            Anna is answering…
           </span>
           <span className="phone-feed-timer">{mm}:{ss}</span>
         </div>

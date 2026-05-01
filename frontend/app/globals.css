@@ -12,6 +12,11 @@
   --muted: #717171;
   --muted-2: #a0a0a0;
   --brand: #d2532b;
+  --brand-soft: #fbeee7;
+  --brand-glow: rgba(210, 83, 43, 0.32);
+  --ember: #f08a4a;
+  --night: #0f1d2e;
+  --night-2: #18293f;
   --dark: #0a0a0a;
 
   --shadow-xs: 0 1px 2px rgba(10, 10, 10, 0.04);
@@ -72,15 +77,37 @@ img { max-width: 100%; display: block; }
   width: 30px;
   height: 30px;
   border-radius: 9px;
-  background: var(--ink);
+  background:
+    radial-gradient(circle at 50% 70%, var(--ember) 0%, var(--brand) 55%, var(--ink) 100%);
   color: white;
   display: grid;
   place-items: center;
   font-weight: 800;
   font-size: 13px;
   letter-spacing: 0;
+  position: relative;
+  box-shadow:
+    0 0 0 1px rgba(10,10,10,0.06),
+    0 6px 18px var(--brand-glow);
 }
-.brand-mark svg { width: 16px; height: 16px; }
+.brand-mark::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 70%, var(--brand-glow) 0%, transparent 65%);
+  filter: blur(6px);
+  z-index: -1;
+  opacity: 0.85;
+  animation: ember-flicker 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes ember-flicker {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  45% { opacity: 1; transform: scale(1.06); }
+  70% { opacity: 0.78; transform: scale(0.98); }
+}
+.brand-mark svg { width: 16px; height: 16px; position: relative; z-index: 1; }
 .oss-pill {
   font-size: 10.5px;
   letter-spacing: 0.06em;
@@ -2706,9 +2733,13 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
 }
 .workflow-avatar.ai {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: linear-gradient(160deg, var(--brand) 0%, var(--ember) 100%);
+  border-color: var(--brand);
   color: white;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  box-shadow: 0 2px 8px var(--brand-glow);
 }
 .workflow-msg-bubble {
   background: var(--surface-2);
@@ -5297,4 +5328,649 @@ select.text-input { cursor: pointer; appearance: none; background-image: url("da
   .stats-band, .config-band, .final-cta { padding-left: 18px; padding-right: 18px; }
   .workflow-output-row { gap: 6px; }
   .workflow-output-row .action-pill { font-size: 11px; padding: 4px 8px; }
+}
+
+/* ============================================================
+   Hearth metaphor — ember dividers, Anna avatar, sketch flourishes
+   ============================================================ */
+
+/* Ember-line divider — drop between sections instead of <hr> */
+.ember-line {
+  position: relative;
+  height: 1px;
+  max-width: 1080px;
+  margin: 8px auto;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--border) 18%,
+    var(--brand) 50%,
+    var(--border) 82%,
+    transparent 100%
+  );
+  opacity: 0.55;
+  overflow: visible;
+}
+.ember-line::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--ember) 0%, var(--brand) 55%, transparent 75%);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 14px var(--brand-glow);
+  animation: ember-flicker 3.2s ease-in-out infinite;
+}
+
+/* Anna avatar — hand-drawn portrait used on hero, PhoneWidget, SMS, footer */
+.anna-avatar {
+  display: inline-grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 35%, #fff 0%, var(--brand-soft) 80%);
+  color: var(--ink);
+  border-radius: 999px;
+  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
+}
+.anna-avatar svg { width: 70%; height: 70%; }
+
+/* Hero eyebrow when it carries Anna's intro */
+.hero-meet-anna {
+  gap: 10px;
+  padding: 6px 14px 6px 6px;
+}
+.hero-meet-anna .anna-avatar {
+  width: 28px; height: 28px;
+}
+
+/* Section eyebrow with sketched flourish (used in section headings) */
+.section-flourish {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.section-flourish::before,
+.section-flourish::after {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--brand) 50%, transparent);
+}
+
+/* Test-call CTA pulse — primary "hear Anna" button gets ember glow */
+.btn-anna {
+  position: relative;
+  background: var(--ink);
+  color: white;
+  border: 1px solid var(--ink);
+}
+.btn-anna::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 30% 100%, var(--brand-glow) 0%, transparent 60%),
+    radial-gradient(circle at 70% 100%, var(--brand-glow) 0%, transparent 60%);
+  filter: blur(8px);
+  z-index: -1;
+  opacity: 0.9;
+  animation: ember-flicker 3.2s ease-in-out infinite;
+}
+.btn-anna .btn-anna-dot {
+  width: 6px; height: 6px;
+  background: var(--ember);
+  border-radius: 999px;
+  margin-right: 8px;
+  display: inline-block;
+  box-shadow: 0 0 8px var(--ember);
+  animation: ember-flicker 1.6s ease-in-out infinite;
+}
+.btn-anna:hover { transform: translateY(-1px); }
+
+/* PhoneWidget — Anna identity */
+.phone-anna {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+  letter-spacing: 0.04em;
+}
+.phone-anna .anna-avatar {
+  width: 18px; height: 18px;
+  border-color: rgba(255,255,255,0.18);
+  background:
+    radial-gradient(circle at 50% 35%, rgba(255,255,255,0.95) 0%, var(--brand-soft) 90%);
+}
+
+/* SMS / workflow conversation — Anna signature on AI bubbles */
+.workflow-msg.out .workflow-msg-bubble { position: relative; }
+.workflow-sig {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--ember);
+  opacity: 0.85;
+}
+.workflow-photo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--surface-3);
+  border: 1px dashed var(--border-strong);
+  color: var(--muted);
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 8px;
+  max-width: 100%;
+  min-width: 0;
+}
+.workflow-photo > svg { flex-shrink: 0; width: 22px; height: 22px; }
+.workflow-photo > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.workflow-msg-bubble { word-break: break-word; }
+.workflow-sig { letter-spacing: 0.04em; }
+
+/* After-hours navy badge on stats card */
+.stats-card.night {
+  background: linear-gradient(160deg, var(--night) 0%, var(--night-2) 100%);
+  border-color: rgba(255,255,255,0.12);
+  position: relative;
+  overflow: hidden;
+}
+.stats-card.night::after {
+  content: "";
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 140px; height: 140px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+.stats-card.ember {
+  background: linear-gradient(160deg, #2a1410 0%, #3a1d14 100%);
+  border-color: rgba(240, 138, 74, 0.18);
+  position: relative;
+  overflow: hidden;
+}
+.stats-card.ember::after {
+  content: "";
+  position: absolute;
+  right: -30px; bottom: -30px;
+  width: 120px; height: 120px;
+  border-radius: 999px;
+  background: radial-gradient(circle, var(--brand-glow) 0%, transparent 60%);
+  pointer-events: none;
+  animation: ember-flicker 3.4s ease-in-out infinite;
+}
+
+/* Industry card sketch — ember tint on hover */
+.industry-card { transition: border-color .14s ease, transform .14s ease, box-shadow .14s ease; }
+.industry-card:hover .industry-sketch {
+  color: var(--brand);
+  filter: drop-shadow(0 0 6px var(--brand-glow));
+}
+
+/* Final CTA — keep the fire on */
+.final-cta {
+  background:
+    radial-gradient(circle at 50% 110%, rgba(210,83,43,0.22) 0%, transparent 55%),
+    var(--ink);
+  position: relative;
+  overflow: hidden;
+}
+.final-cta::before {
+  content: "";
+  position: absolute;
+  left: 50%; bottom: -80px;
+  width: 320px; height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, var(--brand-glow) 0%, transparent 65%);
+  transform: translateX(-50%);
+  filter: blur(20px);
+  animation: ember-flicker 4s ease-in-out infinite;
+}
+.final-cta-mark {
+  background:
+    radial-gradient(circle at 50% 70%, var(--ember) 0%, var(--brand) 60%, rgba(0,0,0,0.4) 100%);
+  border-color: rgba(240,138,74,0.4);
+  box-shadow: 0 8px 30px var(--brand-glow);
+  position: relative;
+  z-index: 1;
+}
+
+/* GitHub social proof — replaces the absent "trusted by" strip */
+.gh-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px 28px;
+  padding: 18px 24px;
+  margin: 28px auto 0;
+  max-width: 720px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: 13px;
+  color: var(--muted);
+}
+.gh-strip a { color: var(--ink); font-weight: 600; }
+.gh-strip strong { color: var(--ink); font-weight: 700; }
+.gh-strip .sep { width: 4px; height: 4px; border-radius: 999px; background: var(--border-strong); }
+
+/* Mobile: ember-line a bit shorter */
+@media (max-width: 720px) {
+  .ember-line { margin: 4px 18px; }
+  .gh-strip { font-size: 12.5px; gap: 10px 18px; padding: 14px 18px; }
+}
+
+/* ============================================================
+   Mobile-friendly polish for new hearth-system components
+   ============================================================ */
+
+/* Hero pill always renders inline at 1 line; allow ellipsis if too long */
+.hero-meet-anna {
+  max-width: 100%;
+  flex-wrap: nowrap;
+}
+.hero-meet-anna > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* GitHub strip — flex-wrap baseline + better hover */
+.gh-strip {
+  text-decoration: none;
+  transition: border-color .14s ease, background .14s ease, transform .14s ease;
+}
+.gh-strip:hover {
+  border-color: var(--ink);
+  background: white;
+  transform: translateY(-1px);
+}
+
+/* Ember-line never sits flush against content */
+.ember-line { margin-top: 16px; margin-bottom: 16px; }
+
+/* Section flourish: readable on mobile, lines kept narrow */
+@media (max-width: 480px) {
+  .section-flourish { font-size: 10.5px; letter-spacing: 0.12em; }
+  .section-flourish::before,
+  .section-flourish::after { width: 18px; }
+}
+
+/* Stats card decorations stay inside the card on mobile */
+@media (max-width: 760px) {
+  .stats-card.night::after { right: -60px; top: -60px; width: 120px; height: 120px; }
+  .stats-card.ember::after { right: -50px; bottom: -50px; width: 100px; height: 100px; }
+  .stats-card-num { font-size: 32px; }
+  .stats-card-label { font-size: 12.5px; }
+
+  /* Hide the second sentence inside the hero Anna pill — keeps shape clean */
+  .hero-meet-anna-tail { display: none; }
+  .hero-meet-anna { padding: 5px 14px 5px 5px; }
+
+  /* Workflow conversation — give bubbles room */
+  .workflow-msg-bubble { max-width: 92%; }
+  .workflow-photo { font-size: 11.5px; padding: 6px 8px; }
+  .workflow-photo > svg { width: 18px; height: 18px; }
+  .workflow-sig { font-size: 10.5px; }
+
+  /* AI avatar — slightly smaller on mobile */
+  .workflow-avatar { width: 24px; height: 24px; }
+  .workflow-avatar.ai { font-size: 11.5px; }
+
+  /* GitHub strip stacks cleaner */
+  .gh-strip {
+    border-radius: 16px;
+    padding: 12px 16px;
+    gap: 6px 14px;
+    margin-top: 22px;
+  }
+  .gh-strip .sep { display: none; }
+
+  /* Ember-line tighter on mobile */
+  .ember-line { margin: 10px 18px; max-width: calc(100% - 36px); }
+
+  /* Hero CTA: ensure btn-anna content (dot + label) doesn't overflow */
+  .hero-actions .btn-anna { padding: 12px 12px; font-size: 14.5px; gap: 0; }
+  .hero-actions .btn-anna .btn-anna-dot { margin-right: 6px; }
+
+  /* Final CTA buttons — stack on small screens for legibility */
+  .final-cta-actions { flex-direction: column; }
+  .final-cta-actions .btn { width: 100%; }
+}
+
+/* Extra-small */
+@media (max-width: 380px) {
+  .gh-strip { font-size: 12px; }
+  .hero-meet-anna { font-size: 11.5px; }
+  .workflow-msg-bubble { font-size: 12.5px; padding: 8px 11px; }
+  .stats-card-num { font-size: 28px; }
+}
+
+/* ============================================================
+   Anna live demo modal
+   ============================================================ */
+
+.anna-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 20, 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: anna-fade 0.18s ease-out;
+}
+@keyframes anna-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.anna-modal {
+  width: 100%;
+  max-width: 760px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  padding: 28px 28px 24px;
+  position: relative;
+  animation: anna-pop 0.22s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+@keyframes anna-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.anna-modal-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 36px; height: 36px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+  display: grid; place-items: center;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease, transform .12s ease;
+}
+.anna-modal-close:hover { background: var(--ink); color: white; transform: rotate(90deg); }
+
+.anna-modal-head { text-align: center; margin-bottom: 18px; }
+.anna-modal-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: var(--brand-soft);
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+.anna-modal-title {
+  font-size: clamp(22px, 3.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 12px 0 0;
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.anna-modal-stage {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+@media (min-width: 640px) {
+  .anna-modal-stage { grid-template-columns: 240px 1fr; gap: 20px; align-items: stretch; }
+}
+
+/* Phone card */
+.anna-phone {
+  position: relative;
+  background: linear-gradient(160deg, var(--ink) 0%, #181820 100%);
+  border-radius: 18px;
+  padding: 22px 18px 18px;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-height: 200px;
+}
+.anna-phone-glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 130%, var(--brand-glow) 0%, transparent 55%);
+  pointer-events: none;
+  animation: ember-flicker 3.6s ease-in-out infinite;
+}
+.anna-phone-avatar {
+  position: relative;
+  width: 72px; height: 72px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+  display: grid; place-items: center;
+  margin-bottom: 12px;
+}
+.anna-phone-avatar .anna-avatar {
+  background: radial-gradient(circle at 50% 35%, #fff 0%, var(--brand-soft) 90%);
+  border-color: rgba(255,255,255,0.3);
+  width: 56px; height: 56px;
+}
+.anna-phone-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.anna-phone-status {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-top: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.anna-phone.phase-ringing .anna-phone-status { color: var(--ember); }
+.anna-phone.phase-ended .anna-phone-status { color: rgba(255,255,255,0.45); }
+
+/* Transcript feed */
+.anna-feed {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 8px;
+  min-height: 240px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.anna-feed-empty {
+  margin: auto;
+  display: flex; align-items: center; gap: 10px;
+  color: var(--muted);
+  font-size: 13px;
+  font-style: italic;
+}
+.anna-feed-empty-dots {
+  display: inline-flex;
+  gap: 4px;
+}
+.anna-feed-empty-dots i {
+  width: 6px; height: 6px; border-radius: 999px; background: var(--muted-2);
+  animation: anna-bounce 1.2s ease-in-out infinite;
+}
+.anna-feed-empty-dots i:nth-child(2) { animation-delay: 0.15s; }
+.anna-feed-empty-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes anna-bounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-4px); opacity: 1; }
+}
+
+.anna-feed-bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  animation: anna-bubble-in 0.28s ease-out;
+}
+.anna-feed-bubble.out { flex-direction: row-reverse; }
+@keyframes anna-bubble-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.anna-feed-avatar {
+  width: 24px; height: 24px;
+  border-radius: 999px;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  display: grid; place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.anna-feed-bubble.out .anna-feed-avatar {
+  background: linear-gradient(160deg, var(--brand) 0%, var(--ember) 100%);
+  color: white;
+  border-color: var(--brand);
+  box-shadow: 0 2px 8px var(--brand-glow);
+}
+.anna-feed-text {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  border-top-left-radius: 4px;
+  padding: 9px 13px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 84%;
+}
+.anna-feed-bubble.out .anna-feed-text {
+  background: var(--ink);
+  color: white;
+  border-color: var(--ink);
+  border-top-left-radius: 14px;
+  border-top-right-radius: 4px;
+}
+
+.anna-feed-bubble.typing .anna-feed-text { padding: 12px 14px; }
+
+.anna-feed-summary {
+  margin-top: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  animation: anna-bubble-in 0.32s ease-out;
+}
+.anna-feed-summary-title {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 8px;
+}
+.anna-feed-summary ul {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.anna-feed-summary li {
+  font-size: 13px;
+  color: var(--ink-2);
+  padding-left: 18px;
+  position: relative;
+}
+.anna-feed-summary li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 7px;
+  width: 8px; height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--ember) 100%);
+}
+
+/* Footer */
+.anna-modal-foot {
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+.anna-modal-foot-note {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+  max-width: 480px;
+  line-height: 1.5;
+}
+.anna-modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.anna-modal-actions .btn { padding: 10px 18px; font-size: 14px; }
+
+/* On-dark variant of the Anna CTA — used inside the dark final-cta */
+.btn-anna-onDark {
+  background: white;
+  color: var(--ink);
+  border-color: white;
+}
+.btn-anna-onDark:hover { background: #f6f6f4; color: var(--ink); }
+.btn-anna-onDark .btn-anna-dot { background: var(--ember); box-shadow: 0 0 8px var(--ember); }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .anna-modal { padding: 22px 18px 18px; border-radius: 18px; max-height: 94vh; }
+  .anna-modal-close { top: 10px; right: 10px; width: 32px; height: 32px; }
+  .anna-modal-title { font-size: 19px; }
+  .anna-modal-eyebrow { font-size: 10.5px; padding: 4px 10px; }
+  .anna-phone { min-height: 180px; padding: 20px 16px 16px; }
+  .anna-phone-avatar { width: 64px; height: 64px; }
+  .anna-phone-avatar .anna-avatar { width: 48px; height: 48px; }
+  .anna-feed { min-height: 200px; max-height: 50vh; padding: 14px; }
+  .anna-feed-text { font-size: 13px; max-width: 88%; }
+  .anna-modal-actions { flex-direction: column; width: 100%; }
+  .anna-modal-actions .btn { width: 100%; justify-content: center; }
 }

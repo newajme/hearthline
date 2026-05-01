@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { Anna, SkPhone, SkScroll } from "./Anna";
+import AnnaDemoLauncher from "./AnnaDemoLauncher";
 import ChatWidget from "./ChatWidget";
 import HeroBackdrop from "./HeroBackdrop";
 import HeroPipeline from "./HeroPipeline";
@@ -8,6 +10,7 @@ import MockDashboard from "./MockDashboard";
 import PhoneWidget from "./PhoneWidget";
 
 const DEMO_URL = "https://calendly.com/contact-codewithmuh/30min";
+const REPO_URL = "https://github.com/codewithmuh/hearthline";
 
 const FEATURES = [
   {
@@ -59,35 +62,48 @@ export default function HomePage() {
         {/* HERO */}
         <section className="shell hero hero-illustrated">
           <HeroBackdrop />
-          <span className="hero-meet hero-meet-platform">
-            <span className="dot-pulse" aria-hidden />
-            <span>For HVAC · Plumbing · Roofing · Solar · Reno</span>
+          <span className="hero-meet hero-meet-platform hero-meet-anna">
+            <Anna />
+            <span>
+              <strong>Hi, I'm Anna.</strong>
+              <span className="hero-meet-anna-tail"> I'm answering your phones tonight.</span>
+            </span>
           </span>
           <h1 className="hero-title">
             The 24/7 AI Front Desk<br />
             <span className="hero-title-em">for Home Services.</span>
           </h1>
           <p className="hero-sub">
-            Hearthline picks up every call, qualifies every lead, and turns a customer
-            photo into a real quote in under a minute. Your crew stays on the tools.
-            We run the front desk.
+            We pick up. We qualify. We book. Your crew stays on the tools.
           </p>
           <div className="hero-actions">
-            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
-              Book a demo <span aria-hidden>→</span>
+            <AnnaDemoLauncher />
+            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-ghost">
+              Book a demo
             </a>
-            <Link href="/login" className="btn btn-ghost">Sign in to dashboard</Link>
           </div>
 
           <LiveTicker />
 
           {/* Animated dashboard preview */}
           <MockDashboard />
+
+          {/* Honest social proof for an OSS project — no fake logos */}
+          <a href={REPO_URL} target="_blank" rel="noreferrer" className="gh-strip">
+            <span>Open-source · MIT</span>
+            <span className="sep" aria-hidden />
+            <strong>★ Star on GitHub</strong>
+            <span className="sep" aria-hidden />
+            <span>Self-host or done-for-you setup</span>
+          </a>
         </section>
+
+        <div className="ember-line" aria-hidden />
 
         {/* SECTION INTRO */}
         <section className="shell section-tight" id="features">
           <div className="section-head">
+            <span className="section-flourish">Features</span>
             <h2 className="section-title">Configure once. Captures every lead.</h2>
             <p className="section-sub">
               Set your business hours, pricing rules, and service area. Hearthline adapts
@@ -133,37 +149,50 @@ export default function HomePage() {
         <section className="shell section" id="impact">
           <div className="stats-band">
             <div>
-              <h2 className="stats-band-title">Designed to capture every opportunity.</h2>
+              <span className="section-flourish" style={{ color: "rgba(255,255,255,0.55)" }}>
+                Why teams switch
+              </span>
+              <h2 className="stats-band-title">Every missed call is a job your competitor books.</h2>
               <p className="stats-band-body">
-                Hearthline doesn't just answer phones — it picks up every inbound across every
-                channel, qualifies it on the spot, and hands your team a deal-ready conversation.
+                Hearthline picks up every inbound across every channel, qualifies it on the
+                spot, and hands your crew a deal-ready conversation. Anna never sleeps,
+                never takes a smoke break, and never forgets to ask for the photo.
               </p>
               <ul>
-                <li>Automate call qualification &amp; scheduling</li>
-                <li>Instant technical answers from your manuals</li>
-                <li>Sync every interaction into your CRM</li>
+                <li>Calls answered while you're on a roof at 3 AM</li>
+                <li>Photos turned into drafted quotes before you finish your coffee</li>
+                <li>Every interaction synced to HubSpot, Pipedrive, or your CRM</li>
               </ul>
             </div>
             <div className="stats-band-right">
-              <div className="stats-card">
-                <div className="stats-card-num">24 / 7</div>
-                <div className="stats-card-label">Always-on coverage. Even the 2 AM emergency.</div>
+              <div className="stats-card night">
+                <div className="stats-card-num">3 AM</div>
+                <div className="stats-card-label">
+                  The burst-pipe call your competitor missed last Tuesday. Anna picked it up.
+                </div>
+              </div>
+              <div className="stats-card ember">
+                <div className="stats-card-num">43 sec</div>
+                <div className="stats-card-label">
+                  Average time from customer photo to drafted PDF quote in tonight's demo.
+                </div>
               </div>
               <div className="stats-card">
-                <div className="stats-card-num">&lt;60s</div>
-                <div className="stats-card-label">From customer photo to drafted PDF quote.</div>
-              </div>
-              <div className="stats-card">
-                <div className="stats-card-num">5</div>
-                <div className="stats-card-label">Channels on day one. Phone, SMS, WhatsApp, email, chat.</div>
+                <div className="stats-card-num">$0</div>
+                <div className="stats-card-label">
+                  Per missed call. Hearthline books the ones your inbox loses.
+                </div>
               </div>
             </div>
           </div>
         </section>
 
+        <div className="ember-line" aria-hidden />
+
         {/* HOW IT FLOWS — cartoon pipeline */}
         <section className="shell section-tight" id="flow">
           <div className="section-head">
+            <span className="section-flourish">How it flows</span>
             <h2 className="section-title">How a job flows through Hearthline.</h2>
             <p className="section-sub">
               Five stages, fully automated. The customer never feels the handoffs —
@@ -176,16 +205,17 @@ export default function HomePage() {
         {/* CONVERSATION SAMPLE */}
         <section className="shell section-tight" id="workflow">
           <div className="section-head">
-            <h2 className="section-title">A real conversation, not a chatbot script.</h2>
+            <span className="section-flourish">A real conversation</span>
+            <h2 className="section-title">Anna handles the objection, not just the hello.</h2>
             <p className="section-sub">
-              SMS thread between Hearthline and a customer. Quote drafted, deal created,
-              calendar booked — all auto.
+              Live SMS thread between Anna and a customer. Photo arrives, quote drafted,
+              deal created, calendar booked — all auto.
             </p>
           </div>
           <div className="workflow-convo workflow-convo-solo">
             <div className="workflow-convo-head">
               <span className="workflow-convo-icon">
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 2 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
+                <SkPhone />
               </span>
               <div>
                 <h3>Inbound Lead Automation</h3>
@@ -204,10 +234,33 @@ export default function HomePage() {
               </div>
               <div className="workflow-msg out">
                 <div className="workflow-msg-bubble">
-                  Understood. Based on standard sizing, that would start around $3,500. I've just
-                  texted you a detailed breakdown and a link to book the technician.
+                  Got it — 5 PVC windows, white. Standard double-glazed, or do you want triple
+                  for noise / energy? And could you snap a quick photo of one window from
+                  inside?
+                  <span className="workflow-sig">— Anna</span>
                 </div>
-                <span className="workflow-avatar ai">AI</span>
+                <span className="workflow-avatar ai">A</span>
+              </div>
+              <div className="workflow-msg in">
+                <span className="workflow-avatar">
+                  <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4 4-7 8-7s8 3 8 7" /></svg>
+                </span>
+                <div className="workflow-msg-bubble">
+                  Double-glazed is fine. Here's a photo.
+                  <span className="workflow-photo">
+                    <SkScroll />
+                    <span>living-room-window.jpg · 2.1 MB</span>
+                  </span>
+                </div>
+              </div>
+              <div className="workflow-msg out">
+                <div className="workflow-msg-bubble">
+                  Perfect — measured ~120×140 cm from your photo. Five units, supply and
+                  install: <strong>$3,540</strong> incl. tax. I've texted the breakdown and a
+                  Tuesday 9:30 AM survey slot. Tap the link to confirm.
+                  <span className="workflow-sig">— Anna</span>
+                </div>
+                <span className="workflow-avatar ai">A</span>
               </div>
             </div>
 
@@ -229,9 +282,14 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="ember-line" aria-hidden />
+
+        <div className="ember-line" aria-hidden />
+
         {/* INDUSTRIES — wide flexibility */}
         <section className="shell section-tight" id="industries">
           <div className="section-head">
+            <span className="section-flourish">Trades</span>
             <h2 className="section-title">One platform. Every trade.</h2>
             <p className="section-sub">
               Pricing logic, scripts, and dispatch rules come pre-tuned for each trade — and
@@ -290,24 +348,25 @@ export default function HomePage() {
           </div>
         </section>
 
+        <div className="ember-line" aria-hidden />
+
         {/* FINAL CTA */}
         <section className="shell section-tight">
           <div className="final-cta">
             <span className="final-cta-mark"><Flame /></span>
             <h2 className="final-cta-title">
-              Stop letting opportunities slip through the cracks.
+              Keep the fire on. We&rsquo;ll watch the door.
             </h2>
             <p className="final-cta-sub">
-              Calls, chats, photo quote requests — Hearthline captures and qualifies 100%
-              of your leads, 24/7. Focus on your craft. We fill your schedule.
+              Anna picks up the 3 AM emergency, the lunch-break callback, and the photo
+              from the customer who can&rsquo;t describe a leak in words. Your team stays
+              on the tools — the schedule fills itself.
             </p>
             <div className="final-cta-actions">
-              <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-onDark btn-lg">
-                Book a demo <span aria-hidden>→</span>
+              <AnnaDemoLauncher variant="onDark" />
+              <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-onDark-ghost">
+                Book a demo
               </a>
-              <Link href="/login" className="btn btn-onDark-ghost">
-                Sign in
-              </Link>
             </div>
           </div>
         </section>
