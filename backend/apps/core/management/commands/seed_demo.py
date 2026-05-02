@@ -117,10 +117,27 @@ class Command(BaseCommand):
     help = "Seed Hearthline with believable demo data."
 
     def add_arguments(self, parser):
-        parser.add_argument("--wipe", action="store_true", help="Delete existing demo data first.")
+        parser.add_argument("--wipe", action="store_true", help="Delete ALL existing data first.")
+        parser.add_argument(
+            "--noinput", "--no-input", action="store_true",
+            help="Skip the interactive confirmation prompt for --wipe (use in CI).",
+        )
 
     def handle(self, *args, **opts):
         if opts.get("wipe"):
+            existing = (
+                Business.objects.count() + Customer.objects.count()
+                + Lead.objects.count() + Quote.objects.count() + Call.objects.count()
+            )
+            if existing and not opts.get("noinput"):
+                self.stdout.write(self.style.WARNING(
+                    f"--wipe will delete {existing} rows across Business/Customer/Lead/"
+                    "Quote/Call/Channel. This is NOT reversible."
+                ))
+                answer = input("Type 'wipe' to continue: ").strip().lower()
+                if answer != "wipe":
+                    self.stdout.write(self.style.ERROR("Aborted."))
+                    return
             self.stdout.write("Wiping…")
             Call.objects.all().delete()
             Quote.objects.all().delete()

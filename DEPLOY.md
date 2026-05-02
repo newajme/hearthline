@@ -48,6 +48,18 @@ DJANGO_DEBUG=0
 DJANGO_ALLOWED_HOSTS=hearthline.codewithmuh.com,*.vercel.app
 DJANGO_CORS_ALLOWED_ORIGINS=https://hearthline.codewithmuh.com
 
+# REQUIRED — encrypts per-business API keys at rest in Postgres.
+# Generate: python -c 'from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())'
+# The backend refuses to boot in prod without this. Rotating it invalidates
+# every saved credential — set it once and store a backup in your password manager.
+HEARTHLINE_ENCRYPTION_KEY=<paste output of generate command>
+
+# REQUIRED if you wire up Vapi — shared secret for webhook + custom-LLM auth.
+# Generate: openssl rand -hex 32
+# Paste the same value into vapi.ai → assistant → Server URL → Secret.
+# Without it, anyone hitting your /chat/completions URL can drain your AI bill.
+VAPI_WEBHOOK_SECRET=<paste output of generate command>
+
 # AI
 ANTHROPIC_API_KEY=...
 OPENAI_API_KEY=...
@@ -62,7 +74,21 @@ TWILIO_FROM_NUMBER=+1...
 # Frontend → Backend (same Vercel project, both deploy together)
 INTERNAL_API_URL=https://hearthline.codewithmuh.com/_/backend/api
 NEXT_PUBLIC_API_URL=https://hearthline.codewithmuh.com/_/backend/api
+
+# Optional — explicit admin URL. If unset the dashboard derives it from
+# NEXT_PUBLIC_API_URL by stripping `/api`. Set this if your admin lives
+# on a different host than your API.
+NEXT_PUBLIC_ADMIN_URL=https://hearthline.codewithmuh.com/_/backend/admin
 ```
+
+> **Rotating `VAPI_WEBHOOK_SECRET`:** generate a new value, set it on Vapi
+> first, then update the env var and redeploy. Vapi will start sending the new
+> secret on its next request; old in-flight calls fail-closed and Vapi retries.
+
+> **Rotating `HEARTHLINE_ENCRYPTION_KEY`:** **don't.** Stored API keys are
+> encrypted with this — rotating invalidates every saved credential and you'll
+> have to re-enter every per-business key in the dashboard. Generate it once,
+> back it up, never touch it.
 
 > Note: with multi-service deploys the backend is served at `https://<your-domain>/_/backend/...`. The Next.js app calls it via the relative `/_/backend/api/...` path.
 

@@ -61,6 +61,7 @@ docker compose exec backend python manage.py seed_demo --wipe
 - **Frontend (TypeScript):** Strict types, no `any` unless commented why, server components by default
 - **CSS:** Plain `globals.css` — keep new styles co-located with the section they belong to
 - **Comments:** Only when the *why* is non-obvious. The *what* is the code.
+- **Accessibility:** Every `<img>` needs descriptive `alt` text; every interactive element needs a label; preserve keyboard navigation. PRs that regress a11y will be asked to fix it.
 
 ## Filing a bug
 
@@ -76,4 +77,4 @@ Open an issue with:
 - **Discussions:** for design + roadmap conversations
 - **Setup help / consulting:** [Book a call](https://calendly.com/contact-codewithmuh/30min)
 
-By contributing, you agree that your contributions will be licensed under the MIT License.
+By contributing, you agree that your contributions will be licensed under the GNU Affero General Public License v3.0 (AGPL-3.0), and that the project maintainer (Muhammad Rashid) may also offer your contributions under a separate commercial license to fund continued development. See [COMMERCIAL.md](COMMERCIAL.md).

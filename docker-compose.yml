@@ -1,3 +1,7 @@
+# Local-development stack: hot-reload Django + Next.js, dev Postgres.
+# DO NOT use this in production — runserver isn't a production server, the
+# Postgres password is in plaintext, and ports are exposed on the host.
+# For VPS deployments use `docker-compose.prod.yml` (gunicorn + Caddy + HTTPS).
 services:
   db:
     image: postgres:16-alpine
