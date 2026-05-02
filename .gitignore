@@ -32,3 +32,4 @@ out/
 # screenshots / scratch
 screenshots-ref/
 *.png.bak
+.env.vercel*
