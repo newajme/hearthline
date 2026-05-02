@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { fetchJson, fmtAge, fmtMoney, type Lead, type Page, type Quote, type Call } from "../../lib";
+import { getAdminUrl } from "../../../lib/api";
 import { LeadActionPill, StatusPill } from "../../parts";
 
 export default async function LeadDetail({ params }: { params: Promise<{ id: string }> }) {
@@ -29,7 +30,7 @@ export default async function LeadDetail({ params }: { params: Promise<{ id: str
         </div>
         <div className="app-pagebar-actions">
           <LeadActionPill lead={lead} />
-          <a href={`http://localhost:8000/admin/leads/lead/${lead.id}/change/`} target="_blank" rel="noreferrer" className="btn btn-ghost">Edit ↗</a>
+          <a href={getAdminUrl(`/leads/lead/${lead.id}/change/`)} target="_blank" rel="noreferrer" className="btn btn-ghost">Edit ↗</a>
         </div>
       </div>
 

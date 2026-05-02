@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import ThemeToggle from "../ThemeToggle";
 import LanguageSwitcher from "../LanguageSwitcher";
+import { getAdminUrl } from "../lib/api";
 
 type SessionUser = {
   id: number;
@@ -115,7 +116,7 @@ function DashUser({ user }: { user: SessionUser }) {
             <a href="/dashboard/customers" className="dash-pop-item">Customers</a>
             {user.is_staff && (
               <a
-                href={`${process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api"}`.replace(/\/api\/?$/, "") + "/admin/"}
+                href={getAdminUrl()}
                 target="_blank"
                 rel="noreferrer"
                 className="dash-pop-item"

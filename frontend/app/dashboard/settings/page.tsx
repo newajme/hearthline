@@ -1,4 +1,5 @@
 import { fetchJson, type Business, type Page } from "../lib";
+import { getAdminUrl } from "../../lib/api";
 import ChannelsEditor from "./ChannelsEditor";
 import SettingsForm from "./SettingsForm";
 
@@ -16,7 +17,7 @@ export default async function SettingsPage() {
         <div className="app-pagebar-actions">
           {biz && (
             <a
-              href={`http://localhost:8000/admin/core/business/${biz.id}/change/`}
+              href={getAdminUrl(`/core/business/${biz.id}/change/`)}
               target="_blank"
               rel="noreferrer"
               className="btn btn-ghost"

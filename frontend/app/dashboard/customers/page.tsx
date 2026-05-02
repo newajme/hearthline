@@ -1,4 +1,5 @@
 import { fetchJson, fmtAge, fmtMoney, type Lead, type Page } from "../lib";
+import { getAdminUrl } from "../../lib/api";
 
 type CustomerRow = {
   id: number;
@@ -58,7 +59,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
           <p>Everyone who has touched a Hearthline channel.</p>
         </div>
         <div className="app-pagebar-actions">
-          <a href="http://localhost:8000/admin/leads/customer/add/" target="_blank" rel="noreferrer" className="btn btn-primary">+ New customer</a>
+          <a href={getAdminUrl("/leads/customer/add/")} target="_blank" rel="noreferrer" className="btn btn-primary">+ New customer</a>
         </div>
       </div>
 

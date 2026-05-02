@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { getAdminUrl } from "../lib/api";
+
 type Counts = { leads: number; calls: number; quotes: number; businesses: number };
 
 const NAV_OPS: { href: string; label: string; key: keyof Counts | null; icon: React.ReactNode }[] = [
@@ -106,7 +108,7 @@ export default function Sidebar({ counts }: { counts: Counts }) {
         </Link>
       ))}
       <a
-        href="http://localhost:8000/admin/"
+        href={getAdminUrl()}
         target="_blank"
         rel="noreferrer"
         className="sidebar-link"

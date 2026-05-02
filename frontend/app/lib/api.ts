@@ -14,6 +14,30 @@ export const API_URL =
 
 export const SESSION_COOKIE = "hearthline_session";
 
+/**
+ * Build a URL into the Django admin. Prefers explicit NEXT_PUBLIC_ADMIN_URL;
+ * otherwise derives the origin from NEXT_PUBLIC_API_URL by stripping `/api`.
+ * Pass a path like "/leads/lead/add/" — leading slash optional.
+ */
+export function getAdminUrl(path: string = ""): string {
+  const explicit = process.env.NEXT_PUBLIC_ADMIN_URL;
+  let base: string;
+  if (explicit) {
+    base = explicit.replace(/\/+$/, "");
+  } else {
+    const api = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+    try {
+      const u = new URL(api);
+      base = `${u.origin}/admin`;
+    } catch {
+      base = "http://localhost:8000/admin";
+    }
+  }
+  if (!path) return `${base}/`;
+  const suffix = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${suffix}`;
+}
+
 export async function apiFetch(path: string, init: RequestInit = {}): Promise<Response> {
   const store = await cookies();
   const session = store.get(SESSION_COOKIE)?.value;

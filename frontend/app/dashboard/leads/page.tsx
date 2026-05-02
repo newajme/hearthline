@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { fetchJson, type Lead, type Page } from "../lib";
+import { getAdminUrl } from "../../lib/api";
 import LeadsTable from "./LeadsTable";
 
 const STATUSES = ["all", "new", "qualifying", "quoted", "booked", "won", "lost"];
@@ -34,7 +35,7 @@ export default async function LeadsPage({
           <p>Every inbound captured and qualified by Hearthline.</p>
         </div>
         <div className="app-pagebar-actions">
-          <a href="http://localhost:8000/admin/leads/lead/add/" target="_blank" rel="noreferrer" className="btn btn-primary">+ New lead</a>
+          <a href={getAdminUrl("/leads/lead/add/")} target="_blank" rel="noreferrer" className="btn btn-primary">+ New lead</a>
         </div>
       </div>
 
