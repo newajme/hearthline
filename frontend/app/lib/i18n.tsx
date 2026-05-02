@@ -36,7 +36,7 @@ const en: Dict = {
   "hero.title1": "The 24/7 AI Front Desk",
   "hero.title2": "for Home Services.",
   "hero.sub": "We pick up. We qualify. We book. Your crew stays on the tools.",
-  "hero.oss": "Open-source · MIT",
+  "hero.oss": "Open-source · AGPL-3.0",
   "hero.star": "★ Star on GitHub",
   "hero.selfHost": "Self-host or done-for-you setup",
 
@@ -121,7 +121,7 @@ const en: Dict = {
   "config.k5.l": "Voice cloning",
   "config.k5.v": "Use your owner's voice (optional)",
   "config.k6.l": "Self-host",
-  "config.k6.v": "MIT-licensed code on GitHub",
+  "config.k6.v": "AGPL-3.0 code on GitHub (commercial license available)",
 
   "finalCta.title": "Keep the fire on. We'll watch the door.",
   "finalCta.sub": "Anna picks up the 3 AM emergency, the lunch-break callback, and the photo from the customer who can't describe a leak in words. Your team stays on the tools — the schedule fills itself.",
@@ -135,7 +135,7 @@ const en: Dict = {
   "footer.terms": "Terms",
   "footer.builtBy": "Built by",
   "footer.bio": "AI build-along videos for developers shipping real agents. Hire me to deploy Hearthline for your business.",
-  "footer.copyright": "Open-source under MIT.",
+  "footer.copyright": "Open-source under AGPL-3.0. Commercial license available.",
   "footer.bottomTail": "with care for home-service teams.",
 
   "lang.label": "Language",
@@ -158,7 +158,7 @@ const es: Dict = {
   "hero.title1": "La recepción IA 24/7",
   "hero.title2": "para servicios del hogar.",
   "hero.sub": "Contestamos. Calificamos. Reservamos. Tu equipo sigue trabajando.",
-  "hero.oss": "Código abierto · MIT",
+  "hero.oss": "Código abierto · AGPL-3.0",
   "hero.star": "★ Dale estrella en GitHub",
   "hero.selfHost": "Auto-aloja o instalación llave en mano",
 
@@ -243,7 +243,7 @@ const es: Dict = {
   "config.k5.l": "Clonación de voz",
   "config.k5.v": "Usa la voz del dueño (opcional)",
   "config.k6.l": "Auto-alojado",
-  "config.k6.v": "Código MIT en GitHub",
+  "config.k6.v": "Código AGPL-3.0 en GitHub (licencia comercial disponible)",
 
   "finalCta.title": "Mantén el fuego encendido. Nosotros vigilamos la puerta.",
   "finalCta.sub": "Anna atiende la urgencia de las 3 AM, la llamada del descanso y la foto del cliente que no sabe describir la fuga. Tu equipo sigue en el trabajo — la agenda se llena sola.",
@@ -257,7 +257,7 @@ const es: Dict = {
   "footer.terms": "Términos",
   "footer.builtBy": "Hecho por",
   "footer.bio": "Vídeos de construcción IA para devs que envían agentes reales. Contrátame para desplegar Hearthline en tu negocio.",
-  "footer.copyright": "Código abierto bajo MIT.",
+  "footer.copyright": "Código abierto bajo AGPL-3.0. Licencia comercial disponible.",
   "footer.bottomTail": "con cariño para equipos del hogar.",
 
   "lang.label": "Idioma",
@@ -280,7 +280,7 @@ const de: Dict = {
   "hero.title1": "Die 24/7 KI-Rezeption",
   "hero.title2": "für Handwerksbetriebe.",
   "hero.sub": "Wir nehmen ab. Wir qualifizieren. Wir buchen. Ihr Team bleibt am Werkzeug.",
-  "hero.oss": "Open Source · MIT",
+  "hero.oss": "Open Source · AGPL-3.0",
   "hero.star": "★ Auf GitHub markieren",
   "hero.selfHost": "Selbst hosten oder Komplett-Setup",
 
@@ -365,7 +365,7 @@ const de: Dict = {
   "config.k5.l": "Stimm-Klon",
   "config.k5.v": "Stimme des Inhabers (optional)",
   "config.k6.l": "Self-Host",
-  "config.k6.v": "MIT-Code auf GitHub",
+  "config.k6.v": "AGPL-3.0-Code auf GitHub (kommerzielle Lizenz verfügbar)",
 
   "finalCta.title": "Halten Sie das Feuer am Brennen. Wir bewachen die Tür.",
   "finalCta.sub": "Anna nimmt den 3-Uhr-Notruf, den Mittagspausen-Rückruf und das Foto vom Kunden, der das Leck nicht in Worte fassen kann. Ihr Team bleibt am Werkzeug — der Kalender füllt sich selbst.",
@@ -379,7 +379,7 @@ const de: Dict = {
   "footer.terms": "AGB",
   "footer.builtBy": "Gebaut von",
   "footer.bio": "KI-Build-Along-Videos für Entwickler. Buchen Sie mich für die Hearthline-Einrichtung.",
-  "footer.copyright": "Open Source unter MIT.",
+  "footer.copyright": "Open Source unter AGPL-3.0. Kommerzielle Lizenz verfügbar.",
   "footer.bottomTail": "mit Sorgfalt für Handwerksbetriebe.",
 
   "lang.label": "Sprache",
@@ -402,7 +402,7 @@ const fr: Dict = {
   "hero.title1": "L'accueil IA 24/7",
   "hero.title2": "pour les services à domicile.",
   "hero.sub": "On décroche. On qualifie. On réserve. Vos équipes restent sur le terrain.",
-  "hero.oss": "Open source · MIT",
+  "hero.oss": "Open source · AGPL-3.0",
   "hero.star": "★ Étoile sur GitHub",
   "hero.selfHost": "Auto-hébergement ou installation clé en main",
 
@@ -487,7 +487,7 @@ const fr: Dict = {
   "config.k5.l": "Clonage de voix",
   "config.k5.v": "Voix du patron (optionnel)",
   "config.k6.l": "Auto-hébergé",
-  "config.k6.v": "Code MIT sur GitHub",
+  "config.k6.v": "Code AGPL-3.0 sur GitHub (licence commerciale disponible)",
 
   "finalCta.title": "Gardez le feu allumé. On surveille la porte.",
   "finalCta.sub": "Anna prend l'urgence de 3h, le rappel du déjeuner et la photo du client qui ne sait pas décrire la fuite. Votre équipe reste sur le terrain — l'agenda se remplit seul.",
@@ -501,7 +501,7 @@ const fr: Dict = {
   "footer.terms": "CGU",
   "footer.builtBy": "Conçu par",
   "footer.bio": "Vidéos build-along IA pour devs. Embauchez-moi pour déployer Hearthline.",
-  "footer.copyright": "Open source sous MIT.",
+  "footer.copyright": "Open source sous AGPL-3.0. Licence commerciale disponible.",
   "footer.bottomTail": "avec soin pour les équipes du domicile.",
 
   "lang.label": "Langue",
@@ -524,7 +524,7 @@ const it: Dict = {
   "hero.title1": "Il front desk IA 24/7",
   "hero.title2": "per i servizi domestici.",
   "hero.sub": "Rispondiamo. Qualifichiamo. Prenotiamo. Il tuo team resta sul lavoro.",
-  "hero.oss": "Open source · MIT",
+  "hero.oss": "Open source · AGPL-3.0",
   "hero.star": "★ Stella su GitHub",
   "hero.selfHost": "Self-host o setup chiavi in mano",
 
@@ -609,7 +609,7 @@ const it: Dict = {
   "config.k5.l": "Clonazione voce",
   "config.k5.v": "Voce del titolare (opzionale)",
   "config.k6.l": "Self-host",
-  "config.k6.v": "Codice MIT su GitHub",
+  "config.k6.v": "Codice AGPL-3.0 su GitHub (licenza commerciale disponibile)",
 
   "finalCta.title": "Tieni acceso il fuoco. Noi guardiamo la porta.",
   "finalCta.sub": "Anna risponde all'urgenza delle 3, alla richiamata in pausa pranzo e alla foto del cliente che non sa descrivere la perdita. Il team resta sul lavoro — l'agenda si riempie da sola.",
@@ -623,7 +623,7 @@ const it: Dict = {
   "footer.terms": "Termini",
   "footer.builtBy": "Costruito da",
   "footer.bio": "Video build-along IA per dev. Assumimi per installare Hearthline.",
-  "footer.copyright": "Open source sotto MIT.",
+  "footer.copyright": "Open source sotto AGPL-3.0. Licenza commerciale disponibile.",
   "footer.bottomTail": "con cura per i team domestici.",
 
   "lang.label": "Lingua",
@@ -646,7 +646,7 @@ const pt: Dict = {
   "hero.title1": "A receção IA 24/7",
   "hero.title2": "para serviços domésticos.",
   "hero.sub": "Atendemos. Qualificamos. Marcamos. A sua equipa fica no terreno.",
-  "hero.oss": "Código aberto · MIT",
+  "hero.oss": "Código aberto · AGPL-3.0",
   "hero.star": "★ Estrela no GitHub",
   "hero.selfHost": "Auto-hospedar ou instalação chave-na-mão",
 
@@ -731,7 +731,7 @@ const pt: Dict = {
   "config.k5.l": "Clonagem de voz",
   "config.k5.v": "Voz do dono (opcional)",
   "config.k6.l": "Auto-hospedado",
-  "config.k6.v": "Código MIT no GitHub",
+  "config.k6.v": "Código AGPL-3.0 no GitHub (licença comercial disponível)",
 
   "finalCta.title": "Mantenha o fogo aceso. Nós vigiamos a porta.",
   "finalCta.sub": "Anna atende a urgência das 3h, o retorno do almoço e a foto do cliente que não sabe descrever a fuga. A equipa fica no trabalho — a agenda enche-se sozinha.",
@@ -745,7 +745,7 @@ const pt: Dict = {
   "footer.terms": "Termos",
   "footer.builtBy": "Construído por",
   "footer.bio": "Vídeos build-along IA para devs. Contrate-me para instalar Hearthline.",
-  "footer.copyright": "Código aberto sob MIT.",
+  "footer.copyright": "Código aberto sob AGPL-3.0. Licença comercial disponível.",
   "footer.bottomTail": "com cuidado para equipas domésticas.",
 
   "lang.label": "Idioma",
@@ -768,7 +768,7 @@ const nl: Dict = {
   "hero.title1": "De 24/7 AI-receptie",
   "hero.title2": "voor klusbedrijven.",
   "hero.sub": "Wij nemen op. Wij kwalificeren. Wij plannen. Jouw team blijft aan het werk.",
-  "hero.oss": "Open source · MIT",
+  "hero.oss": "Open source · AGPL-3.0",
   "hero.star": "★ Ster op GitHub",
   "hero.selfHost": "Self-host of kant-en-klare setup",
 
@@ -853,7 +853,7 @@ const nl: Dict = {
   "config.k5.l": "Stem klonen",
   "config.k5.v": "Stem van eigenaar (optioneel)",
   "config.k6.l": "Self-host",
-  "config.k6.v": "MIT-code op GitHub",
+  "config.k6.v": "AGPL-3.0-code op GitHub (commerciële licentie beschikbaar)",
 
   "finalCta.title": "Hou het vuur aan. Wij bewaken de deur.",
   "finalCta.sub": "Anna pakt de 3-uur-noodmelding, het lunchpauze-terugbelverzoek en de foto van de klant die het lek niet kan beschrijven. Jouw team blijft aan het werk — de agenda vult zichzelf.",
@@ -867,7 +867,7 @@ const nl: Dict = {
   "footer.terms": "Voorwaarden",
   "footer.builtBy": "Gemaakt door",
   "footer.bio": "AI build-along video's voor devs. Huur me in om Hearthline op te zetten.",
-  "footer.copyright": "Open source onder MIT.",
+  "footer.copyright": "Open source onder AGPL-3.0. Commerciële licentie beschikbaar.",
   "footer.bottomTail": "met zorg voor klusteams.",
 
   "lang.label": "Taal",
@@ -890,7 +890,7 @@ const zh: Dict = {
   "hero.title1": "24/7 AI 前台",
   "hero.title2": "为家庭服务团队打造。",
   "hero.sub": "我们接听。我们筛选。我们预约。让你的团队专注施工。",
-  "hero.oss": "开源 · MIT",
+  "hero.oss": "开源 · AGPL-3.0",
   "hero.star": "★ 在 GitHub 上 Star",
   "hero.selfHost": "自部署或全包安装",
 
@@ -975,7 +975,7 @@ const zh: Dict = {
   "config.k5.l": "语音克隆",
   "config.k5.v": "用老板的声音(可选)",
   "config.k6.l": "自部署",
-  "config.k6.v": "GitHub 上的 MIT 代码",
+  "config.k6.v": "GitHub 上的 AGPL-3.0 代码(提供商业许可)",
 
   "finalCta.title": "守住你的炉火。我们替你守门。",
   "finalCta.sub": "Anna 接凌晨 3 点的紧急来电,接午休时段的回拨,接那个说不清漏水位置的客户照片。你的团队继续干活 — 日程自己填满。",
@@ -989,7 +989,7 @@ const zh: Dict = {
   "footer.terms": "条款",
   "footer.builtBy": "构建者",
   "footer.bio": "面向开发者的 AI 实战视频。雇我为你部署 Hearthline。",
-  "footer.copyright": "MIT 开源。",
+  "footer.copyright": "AGPL-3.0 开源(提供商业许可)。",
   "footer.bottomTail": "用心打造,献给家庭服务团队。",
 
   "lang.label": "语言",
@@ -1012,7 +1012,7 @@ const ja: Dict = {
   "hero.title1": "24時間365日のAI受付",
   "hero.title2": "ホームサービス向け。",
   "hero.sub": "電話に出ます。見極めます。予約します。チームは現場に集中。",
-  "hero.oss": "オープンソース · MIT",
+  "hero.oss": "オープンソース · AGPL-3.0",
   "hero.star": "★ GitHubでスター",
   "hero.selfHost": "セルフホストまたは導入代行",
 
@@ -1097,7 +1097,7 @@ const ja: Dict = {
   "config.k5.l": "音声クローン",
   "config.k5.v": "オーナーの声を使用(任意)",
   "config.k6.l": "セルフホスト",
-  "config.k6.v": "GitHubのMITコード",
+  "config.k6.v": "GitHubのAGPL-3.0コード(商用ライセンスあり)",
 
   "finalCta.title": "炉火は灯したまま。ドアは私たちが見張ります。",
   "finalCta.sub": "Annaは深夜3時の緊急、昼休みの折り返し、漏水を言葉にできない顧客の写真を受けます。チームは現場に集中 — スケジュールは自然に埋まります。",
@@ -1111,7 +1111,7 @@ const ja: Dict = {
   "footer.terms": "利用規約",
   "footer.builtBy": "制作:",
   "footer.bio": "開発者向けのAIビルドアロング動画。Hearthline導入のご依頼歓迎。",
-  "footer.copyright": "MITによるオープンソース。",
+  "footer.copyright": "AGPL-3.0によるオープンソース(商用ライセンスあり)。",
   "footer.bottomTail": "ホームサービスチームへの想いを込めて。",
 
   "lang.label": "言語",
@@ -1134,7 +1134,7 @@ const ar: Dict = {
   "hero.title1": "استقبال ذكي 24/7",
   "hero.title2": "لخدمات المنازل.",
   "hero.sub": "نرد. نُقيّم. نحجز. وفريقك يبقى على رأس عمله.",
-  "hero.oss": "مفتوح المصدر · MIT",
+  "hero.oss": "مفتوح المصدر · AGPL-3.0",
   "hero.star": "★ نجّمنا على GitHub",
   "hero.selfHost": "استضف بنفسك أو إعداد جاهز",
 
@@ -1219,7 +1219,7 @@ const ar: Dict = {
   "config.k5.l": "استنساخ الصوت",
   "config.k5.v": "صوت المالك (اختياري)",
   "config.k6.l": "استضافة ذاتية",
-  "config.k6.v": "كود MIT على GitHub",
+  "config.k6.v": "كود AGPL-3.0 على GitHub (ترخيص تجاري متاح)",
 
   "finalCta.title": "أبقِ النار مشتعلة. نحن نراقب الباب.",
   "finalCta.sub": "آنّا ترد على طوارئ الثالثة فجراً، ومعاودة الاتصال بعد الغداء، وصورة العميل الذي لا يستطيع وصف التسرب. فريقك يكمل عمله — والجدول يمتلئ وحده.",
@@ -1233,7 +1233,7 @@ const ar: Dict = {
   "footer.terms": "الشروط",
   "footer.builtBy": "بُني بواسطة",
   "footer.bio": "فيديوهات بناء عملية بالذكاء الاصطناعي للمطورين. وظّفني لتنصيب Hearthline.",
-  "footer.copyright": "مفتوح المصدر تحت MIT.",
+  "footer.copyright": "مفتوح المصدر تحت AGPL-3.0. ترخيص تجاري متاح.",
   "footer.bottomTail": "بعناية لفرق خدمات المنازل.",
 
   "lang.label": "اللغة",

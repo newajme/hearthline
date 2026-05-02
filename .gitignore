@@ -33,3 +33,4 @@ out/
 screenshots-ref/
 *.png.bak
 .env.vercel*
+.vercel

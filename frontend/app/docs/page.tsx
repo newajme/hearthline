@@ -93,7 +93,7 @@ export default function DocsPage() {
           </h1>
           <p className="hero-sub">
             Hearthline is open source. Same dashboard you saw on the home page, same AI pipeline,
-            the same code we ship in the YouTube build-alongs — yours under MIT.
+            the same code we ship in the YouTube build-alongs — yours under AGPL-3.0.
           </p>
           <div className="hero-actions">
             <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
@@ -248,7 +248,7 @@ docker compose up --build
               <div className="creator-stat"><strong>17K+</strong><span>YouTube subscribers</span></div>
               <div className="creator-stat"><strong>75</strong><span>Build-along videos</span></div>
               <div className="creator-stat"><strong>1</strong><span>Video / week cadence</span></div>
-              <div className="creator-stat"><strong>MIT</strong><span>Licensed code</span></div>
+              <div className="creator-stat"><strong>AGPL-3.0</strong><span>Licensed code</span></div>
             </div>
           </div>
         </section>
@@ -263,8 +263,8 @@ docker compose up --build
               The whole thing is yours. Fork it, deploy it, sell it under your own brand.
             </h2>
             <p className="final-cta-sub">
-              MIT-licensed. No attribution required. The dashboard you've been scrolling
-              through is the one you'll get.
+              AGPL-3.0 by default; commercial license available for white-label and closed-source
+              forks. The dashboard you've been scrolling through is the one you'll get.
             </p>
             <div className="final-cta-actions">
               <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-onDark">
@@ -283,7 +283,7 @@ docker compose up --build
             <div className="brand" style={{ marginBottom: 12 }}>
               <span className="brand-mark"><Flame /></span>
               <span>Hearthline</span>
-              <span className="oss-pill">MIT</span>
+              <span className="oss-pill">AGPL-3.0</span>
             </div>
             <p className="footer-tag">
               Open-source AI front-desk for home-service teams.

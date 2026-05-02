@@ -44,7 +44,7 @@ const FAQS: Array<{ q: string; a: React.ReactNode }> = [
   },
   {
     q: "Can I host Hearthline myself?",
-    a: <>Yes — the whole stack is open source under MIT. See the <a href="/docs">docs</a> for the self-host quick start.</>,
+    a: <>Yes — the whole stack is open source under AGPL-3.0. A commercial license is available for white-labeling, reselling, or running closed-source forks. See the <a href="/docs">docs</a> for the self-host quick start.</>,
   },
 ];
 

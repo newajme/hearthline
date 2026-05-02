@@ -1758,7 +1758,7 @@ img { max-width: 100%; display: block; }
 
 .chat-teaser {
   position: fixed;
-  bottom: 92px;
+  bottom: 96px;
   right: 24px;
   background: white;
   border: 1px solid var(--border);
@@ -1769,11 +1769,14 @@ img { max-width: 100%; display: block; }
   gap: 12px;
   align-items: flex-start;
   z-index: 60;
-  max-width: 320px;
+  max-width: 280px;
   cursor: pointer;
   text-align: left;
   font-family: inherit;
   animation: bubble-in .35s ease;
+}
+@media (max-width: 720px) {
+  .chat-teaser { display: none; }
 }
 .chat-teaser-avatar {
   width: 36px; height: 36px;
