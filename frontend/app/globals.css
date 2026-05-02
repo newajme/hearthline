@@ -8126,10 +8126,11 @@ html[dir="rtl"] .pipeline-num { direction: ltr; unicode-bidi: isolate; }
 .hero-eyebrow-trades-label {
   font-family: var(--font-serif);
   font-style: italic;
-  font-weight: 500;
-  font-size: 14.5px;
+  font-weight: 900;
+  font-size: 19px;
   color: var(--brand);
   font-variation-settings: "SOFT" 100, "opsz" 144;
+  letter-spacing: -0.012em;
 }
 .hero-eyebrow-trades-list {
   font-weight: 500;
@@ -8140,7 +8141,7 @@ html[dir="rtl"] .pipeline-num { direction: ltr; unicode-bidi: isolate; }
 }
 @media (max-width: 640px) {
   .hero-eyebrow-trades { font-size: 11.5px; }
-  .hero-eyebrow-trades-label { font-size: 13px; }
+  .hero-eyebrow-trades-label { font-size: 15px; }
   .hero-eyebrow-trades-list { font-size: 10.5px; letter-spacing: 0.06em; }
 }
 
@@ -8183,3 +8184,25 @@ html[dir="rtl"] .pipeline-num { direction: ltr; unicode-bidi: isolate; }
   border-color: var(--border-strong);
 }
 [data-theme="dark"] .btn-github:hover { background: var(--surface-2); border-color: var(--ink-2); }
+
+/* =====================================================
+   Topbar — icon-only link (GitHub) + lighter overall right cluster
+   ===================================================== */
+.topbar-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: var(--muted);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.topbar-icon-link:hover {
+  color: var(--ink);
+  background: var(--surface-2);
+}
+@media (max-width: 480px) {
+  .topbar-icon-link { display: none; }
+}
+

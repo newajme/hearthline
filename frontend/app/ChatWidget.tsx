@@ -44,11 +44,9 @@ export default function ChatWidget() {
   const scriptIdx = useRef(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
-  // Reveal the FAB only after the user scrolls past the hero (~600px),
-  // then show the teaser bubble briefly so it never collides with the dashboard preview on first paint.
   useEffect(() => {
     function onScroll() {
-      if (window.scrollY > 600) {
+      if (window.scrollY > 1600) {
         setRevealed(true);
         setTeaser(true);
         window.removeEventListener("scroll", onScroll);
