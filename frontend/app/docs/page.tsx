@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-import ThemeToggle from "../ThemeToggle";
-import LanguageSwitcher from "../LanguageSwitcher";
+import { MarketingFooter, MarketingTopbar } from "../MarketingShell";
 
 export const metadata = {
   title: "Docs",
@@ -17,23 +16,90 @@ export const metadata = {
 
 const GITHUB_URL = "https://github.com/codewithmuh/hearthline";
 const YT_URL = "https://www.youtube.com/@codewithmuh";
+const REPO_TREE = "https://github.com/codewithmuh/hearthline/blob/main";
 
 const STACK = [
-  { tag: "Backend", title: "Django 5 + DRF", body: "5 apps · 8 models · Vapi custom-LLM endpoint · Twilio webhooks · service layer for Claude orchestration + OpenAI Vision. Migrations included.", codeHint: "apps/{core,leads,calls,quotes,ai}" },
-  { tag: "Frontend", title: "Next.js 15 + React 19", body: "App Router, server components, real-time dashboard with KPIs, lead detail, quote line items, customers, settings.", codeHint: "app/dashboard/{leads,calls,quotes,…}" },
-  { tag: "Voice", title: "Vapi + Twilio (custom-LLM mode)", body: "Vapi POSTs every conversation turn to /api/calls/vapi/chat/completions/ — Anna runs an agentic loop server-side and returns the next utterance plus optional X-Vapi-End-Call header.", codeHint: "apps/calls/views.py · chat_completions" },
-  { tag: "AI Pipeline", title: "Anna · Claude Sonnet 4.6 + GPT-4o vision", body: "5-tool loop (qualify_lead, check_availability, book_appointment, send_sms, end_call). Tools persist Customer, Lead, Conversation rows in real time. Vision pipeline drafts quotes from a single photo.", codeHint: "apps/calls/agent/{prompts,tools,receptionist}.py" },
-  { tag: "Database", title: "Postgres 16", body: "Single docker volume. Seed command included — one shell command and you have 8 leads, 5 calls, 4 quotes to play with.", codeHint: "manage.py seed_demo --wipe" },
-  { tag: "Infra", title: "Docker Compose", body: "Three services: db, backend, frontend. Hot-reload mounted on both apps. No build tooling, no Vercel config, no AWS.", codeHint: "docker-compose.yml" },
+  {
+    tag: "Backend",
+    title: "Django 5 + DRF",
+    body: "5 apps · 8 models · Vapi custom-LLM endpoint · Twilio webhooks · service layer for Claude orchestration + OpenAI Vision.",
+    codeHint: "backend/apps/",
+    href: `${REPO_TREE}/backend/apps`,
+  },
+  {
+    tag: "Frontend",
+    title: "Next.js 15 + React 19",
+    body: "App Router, server components, real-time dashboard with KPIs, lead detail, quote line items, customers, settings.",
+    codeHint: "frontend/app/dashboard/",
+    href: `${REPO_TREE}/frontend/app/dashboard`,
+  },
+  {
+    tag: "Voice",
+    title: "Vapi + Twilio (custom-LLM mode)",
+    body: "Vapi POSTs every conversation turn to /api/calls/vapi/chat/completions/. Anna runs an agentic loop server-side and returns the next utterance plus optional X-Vapi-End-Call header.",
+    codeHint: "apps/calls/views.py · chat_completions",
+    href: `${REPO_TREE}/backend/apps/calls/views.py`,
+  },
+  {
+    tag: "AI Pipeline",
+    title: "Anna · Claude Sonnet 4.6 + GPT-4o vision",
+    body: "5-tool loop (qualify_lead, check_availability, book_appointment, send_sms, end_call). Tools persist Customer, Lead, Conversation rows in real time.",
+    codeHint: "apps/calls/agent/{prompts,tools,receptionist}.py",
+    href: `${REPO_TREE}/backend/apps/calls/agent`,
+  },
+  {
+    tag: "Database",
+    title: "Postgres 16",
+    body: "Single docker volume. Seed command included — one shell command and you have 8 leads, 5 calls, 4 quotes to play with.",
+    codeHint: "manage.py seed_demo --wipe",
+    href: `${REPO_TREE}/backend/apps/leads/management/commands/seed_demo.py`,
+  },
+  {
+    tag: "Infra",
+    title: "Docker Compose",
+    body: "Three services: db, backend, frontend. Hot-reload mounted on both apps. No build tooling, no Vercel config required.",
+    codeHint: "docker-compose.yml",
+    href: `${REPO_TREE}/docker-compose.yml`,
+  },
 ];
 
 const PIPELINE = [
-  { stage: "Inbound call", code: "Vapi · custom-LLM mode", body: "Vapi handles STT + TTS. The caller hears Anna in the voice you picked, in the language you configured." },
-  { stage: "Every turn POSTs the transcript", code: "POST /api/calls/vapi/chat/completions/", body: "OpenAI-compatible payload. Django converts it to Claude format and runs the agent loop." },
-  { stage: "Anna decides what to do next", code: "agent/receptionist.py", body: "Claude Sonnet 4.6 picks from 5 tools — qualify_lead, check_availability, book_appointment, send_sms, end_call — or speaks." },
-  { stage: "Tools write to the database", code: "services/persistence.py", body: "qualify_lead creates/updates Customer + Lead + Conversation. book_appointment confirms a slot. Every fact Anna learned is persisted." },
-  { stage: "Photo → quote", code: "POST /api/quotes/from-photo/", body: "GPT-4o vision drafts line items, subtotal, tax, total, and customer-facing notes from a single inbound MMS or chat upload." },
-  { stage: "Dashboard updates live", code: "GET /api/leads/ · GET /api/calls/", body: "Server component re-fetches, action pill flips to Qualified / Quote Sent / Booked / Won." },
+  {
+    stage: "Inbound call",
+    code: "Vapi · custom-LLM mode",
+    body: "Vapi handles STT + TTS. The caller hears Anna in the voice you picked, in the language you configured.",
+    href: `${REPO_TREE}/backend/apps/calls/views.py`,
+  },
+  {
+    stage: "Every turn POSTs the transcript",
+    code: "POST /api/calls/vapi/chat/completions/",
+    body: "OpenAI-compatible payload. Django converts it to Claude format and runs the agent loop.",
+    href: `${REPO_TREE}/backend/apps/calls/views.py`,
+  },
+  {
+    stage: "Anna decides what to do next",
+    code: "agent/receptionist.py",
+    body: "Claude Sonnet 4.6 picks from 5 tools — qualify_lead, check_availability, book_appointment, send_sms, end_call — or speaks.",
+    href: `${REPO_TREE}/backend/apps/calls/agent/receptionist.py`,
+  },
+  {
+    stage: "Tools write to the database",
+    code: "services/persistence.py",
+    body: "qualify_lead creates/updates Customer + Lead + Conversation. book_appointment confirms a slot. Every fact Anna learned is persisted.",
+    href: `${REPO_TREE}/backend/apps/calls/services/persistence.py`,
+  },
+  {
+    stage: "Photo → quote",
+    code: "POST /api/quotes/from-photo/",
+    body: "GPT-4o vision drafts line items, subtotal, tax, total, and customer-facing notes from a single inbound MMS or chat upload.",
+    href: `${REPO_TREE}/backend/apps/ai/services.py`,
+  },
+  {
+    stage: "Dashboard updates live",
+    code: "GET /api/leads/ · GET /api/calls/",
+    body: "Server component re-fetches, action pill flips to Qualified / Quote Sent / Booked / Won.",
+    href: `${REPO_TREE}/frontend/app/dashboard`,
+  },
 ];
 
 const ROADMAP = {
@@ -60,126 +126,84 @@ const ROADMAP = {
   ],
 };
 
+const TOC = [
+  { id: "quickstart", label: "Quick start", group: "Get started" },
+  { id: "architecture", label: "Architecture", group: "Get started" },
+  { id: "stack", label: "What's in the repo", group: "Concepts" },
+  { id: "pipeline", label: "Anna's agent loop", group: "Concepts" },
+  { id: "voice", label: "Wiring real voice", group: "Integrations" },
+  { id: "demo-data", label: "Seed demo data", group: "Integrations" },
+  { id: "roadmap", label: "Roadmap", group: "Project" },
+  { id: "license", label: "License", group: "Project" },
+];
+
 export default function DocsPage() {
+  const groups = Array.from(new Set(TOC.map((t) => t.group)));
+
   return (
     <>
-      <div className="topbar-wrap">
-        <header className="topbar">
-          <Link href="/" className="brand" aria-label="Hearthline home">
-            <span className="brand-mark"><Flame /></span>
-            <span>Hearthline</span>
-            <span className="oss-pill">open-source</span>
-          </Link>
-          <nav className="nav-links">
-            <Link href="/" className="nav-link">Home</Link>
-            <Link href="#stack" className="nav-link">Stack</Link>
-            <Link href="#flow" className="nav-link">Pipeline</Link>
-            <Link href="#run" className="nav-link">Quick start</Link>
-            <Link href="#roadmap" className="nav-link">Roadmap</Link>
-            <Link href="/login" className="nav-link">Sign in</Link>
-          </nav>
-          <div className="topbar-right">
-            <LanguageSwitcher />
-            <ThemeToggle />
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-ghost gh-btn">
-              <Github /> Star on GitHub
-            </a>
-            <a href={YT_URL} target="_blank" rel="noreferrer" className="btn btn-primary">▶ Build along</a>
-          </div>
-        </header>
-      </div>
+      <MarketingTopbar
+        ossPill="AGPL-3.0"
+        links={[
+          { href: "/", label: "Home" },
+          { href: "#quickstart", label: "Quick start" },
+          { href: "#stack", label: "Stack" },
+          { href: "#pipeline", label: "Pipeline" },
+          { href: "#roadmap", label: "Roadmap" },
+        ]}
+      />
 
-      <main>
-        {/* HERO */}
-        <section className="shell hero">
-          <span className="hero-eyebrow">
-            <span className="dot" /> Built in public · AGPL-3.0 · Self-hostable
-          </span>
-          <h1 className="hero-title">
-            Fork the whole stack.<br />Run it on your laptop.
-          </h1>
-          <p className="hero-sub">
-            Hearthline is open source. Same dashboard you saw on the home page, same AI pipeline,
-            the same code we ship in the YouTube build-alongs — yours under AGPL-3.0.
-          </p>
-          <div className="hero-actions">
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
-              <Github /> Clone the repo
-            </a>
-            <a href={YT_URL} target="_blank" rel="noreferrer" className="btn btn-ghost">
-              ▶ Watch the build
-            </a>
-          </div>
-
-          <ul className="hero-meta">
-            <li><strong>0</strong> SaaS lock-in</li>
-            <li><strong>5</strong> Django apps</li>
-            <li><strong>2</strong> AI providers (Claude + OpenAI)</li>
-            <li><strong>3</strong> Docker services</li>
-          </ul>
-        </section>
-
-        <div className="ember-line" aria-hidden />
-
-        {/* STACK */}
-        <section className="shell section-tight" id="stack">
-          <div className="section-head">
-            <span className="section-flourish">What&rsquo;s in the repo</span>
-            <h2 className="section-title">A real, runnable stack — not a marketing site.</h2>
-            <p className="section-sub">
-              Every box below is wired up in code. No "coming soon" labels. Empty fields just
-              mean you haven't filled in your API keys yet.
-            </p>
-          </div>
-          <div className="stack-grid">
-            {STACK.map((s) => (
-              <article className="stack-card" key={s.title}>
-                <span className="stack-tag">{s.tag}</span>
-                <h3 className="stack-title">{s.title}</h3>
-                <p className="stack-body">{s.body}</p>
-                <code className="stack-code">{s.codeHint}</code>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <div className="ember-line" aria-hidden />
-
-        {/* PIPELINE */}
-        <section className="shell section" id="flow">
-          <div className="section-head">
-            <span className="section-flourish">The pipeline</span>
-            <h2 className="section-title">What happens when Anna picks up.</h2>
-            <p className="section-sub">
-              Six stages, each one a single function, webhook, or tool dispatch in the
-              codebase. Trace it with your IDE in five minutes.
-            </p>
-          </div>
-          <ol className="pipeline">
-            {PIPELINE.map((s, i) => (
-              <li key={s.stage} className="pipeline-step">
-                <span className="pipeline-num">{String(i + 1).padStart(2, "0")}</span>
-                <div>
-                  <div className="pipeline-stage">{s.stage}</div>
-                  <code className="pipeline-code">{s.code}</code>
-                  <p className="pipeline-body">{s.body}</p>
+      <main className="docs-main">
+        <div className="docs-shell">
+          <aside className="docs-toc" aria-label="Documentation table of contents">
+            <div className="docs-toc-inner">
+              {groups.map((g) => (
+                <div className="docs-toc-group" key={g}>
+                  <p className="docs-toc-group-label">{g}</p>
+                  <ul>
+                    {TOC.filter((t) => t.group === g).map((t) => (
+                      <li key={t.id}>
+                        <a href={`#${t.id}`} className="docs-toc-link">
+                          {t.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </li>
-            ))}
-          </ol>
-        </section>
+              ))}
+              <div className="docs-toc-foot">
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="docs-toc-cta"
+                >
+                  ★ Star on GitHub
+                </a>
+                <a href={YT_URL} target="_blank" rel="noreferrer" className="docs-toc-yt">
+                  ▶ Build along on YouTube
+                </a>
+              </div>
+            </div>
+          </aside>
 
-        <div className="ember-line" aria-hidden />
+          <article className="docs-body">
+            <header className="docs-hero">
+              <span className="docs-hero-eyebrow">
+                <span className="dot" /> Built in public · AGPL-3.0 · Self-hostable
+              </span>
+              <h1 className="docs-hero-title">Self-host Hearthline.</h1>
+              <p className="docs-hero-sub">
+                Same dashboard, same AI pipeline, same code we ship in the YouTube
+                build-alongs — yours under AGPL-3.0. Three commands and you're running
+                the full stack locally.
+              </p>
+            </header>
 
-        {/* RUN */}
-        <section className="shell section-tight" id="run">
-          <div className="section-head">
-            <span className="section-flourish">Get it running</span>
-            <h2 className="section-title">Three commands. No login. No waitlist.</h2>
-          </div>
-          <div className="run-grid">
-            <pre className="codeblock">
-              <code>{`# 1 — clone
+            <section id="quickstart" className="docs-section">
+              <h2 className="docs-h2">Quick start</h2>
+              <pre className="docs-code">
+                <code>{`# 1 — clone
 git clone https://github.com/codewithmuh/hearthline.git
 cd hearthline
 
@@ -189,167 +213,220 @@ cp .env.example .env
 # 3 — bring it up
 docker compose up --build
 
-# you now have:
 #   http://localhost:3000        Next.js dashboard
 #   http://localhost:8000/admin  Django admin
 #   http://localhost:8000/api    REST API`}</code>
-            </pre>
-            <div className="run-side">
-              <h3>Want demo data?</h3>
-              <p>Run the seed command and the dashboard fills with believable rows.</p>
-              <pre className="codeblock codeblock-mini">
-                <code>docker compose exec backend \
-  python manage.py seed_demo --wipe</code>
               </pre>
-              <h3 style={{ marginTop: 28 }}>Wiring real voice</h3>
-              <p>Drop your Vapi key in <code>.env</code> and point the assistant webhook at:</p>
-              <pre className="codeblock codeblock-mini">
-                <code>https://&lt;ngrok&gt;/api/calls/webhooks/vapi/</code>
-              </pre>
-              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-primary" style={{ marginTop: 24 }}>
-                <Github /> Read the README
-              </a>
-            </div>
-          </div>
-        </section>
-
-        <div className="ember-line" aria-hidden />
-
-        {/* ROADMAP */}
-        <section className="shell section" id="roadmap">
-          <div className="section-head">
-            <span className="section-flourish">Built in public</span>
-            <h2 className="section-title">What's done. What's next. What's not yet.</h2>
-            <p className="section-sub">
-              Pull requests welcome. Each line below is a real GitHub issue.
-            </p>
-          </div>
-          <div className="roadmap-grid">
-            <RoadmapCol title="Shipped" tone="done" items={ROADMAP.done} />
-            <RoadmapCol title="In progress" tone="wip" items={ROADMAP.wip} />
-            <RoadmapCol title="Open issues" tone="todo" items={ROADMAP.todo} />
-          </div>
-        </section>
-
-        {/* CREATOR */}
-        <section className="shell section-tight">
-          <div className="creator-card">
-            <div className="creator-text">
-              <span className="section-flourish">Built by</span>
-              <h2 className="creator-title">@codewithmuh</h2>
-              <p className="creator-body">
-                I make AI build-along videos for developers. Hearthline is one of the projects
-                I'm shipping live — the codebase here is the same one in the videos. If you're
-                learning to ship AI agents end-to-end, the channel walks through every line.
-              </p>
-              <div className="creator-actions">
-                <a href={YT_URL} target="_blank" rel="noreferrer" className="btn btn-primary">
-                  ▶ codewithmuh on YouTube
+              <div className="docs-next-cards">
+                <a href="#voice" className="docs-next-card">
+                  <strong>Wire up Vapi</strong>
+                  <span>Drop your key in <code>.env</code> and point a webhook.</span>
                 </a>
-                <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-ghost">
-                  <Github /> github.com/codewithmuh
+                <a href="#demo-data" className="docs-next-card">
+                  <strong>Seed demo data</strong>
+                  <span>One command — the dashboard fills with believable rows.</span>
+                </a>
+                <a
+                  href={`${REPO_TREE}/DEPLOY.md`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="docs-next-card"
+                >
+                  <strong>Deploy to a VPS</strong>
+                  <span>Docker Compose + Caddy auto-HTTPS in DEPLOY.md.</span>
                 </a>
               </div>
-            </div>
-            <div className="creator-grid">
-              <div className="creator-stat"><strong>25K+</strong><span>YouTube subscribers</span></div>
-              <div className="creator-stat"><strong>75</strong><span>Build-along videos</span></div>
-              <div className="creator-stat"><strong>1</strong><span>Video / week cadence</span></div>
-              <div className="creator-stat"><strong>AGPL-3.0</strong><span>Licensed code</span></div>
-            </div>
-          </div>
-        </section>
+            </section>
 
-        <div className="ember-line" aria-hidden />
+            <section id="architecture" className="docs-section">
+              <h2 className="docs-h2">Architecture overview</h2>
+              <p className="docs-p">
+                Three Docker services, two AI providers, one Postgres. The frontend
+                renders server components against a Django REST API; voice runs through
+                Vapi's custom-LLM mode so Anna keeps a real agent loop server-side.
+              </p>
+              <div className="docs-arch-grid">
+                <div className="docs-arch-cell">
+                  <span className="docs-arch-cell-num">01</span>
+                  <strong>Caller</strong>
+                  <span>Phone · SMS · WhatsApp · web chat · email</span>
+                </div>
+                <div className="docs-arch-arrow" aria-hidden>→</div>
+                <div className="docs-arch-cell">
+                  <span className="docs-arch-cell-num">02</span>
+                  <strong>Vapi / Twilio</strong>
+                  <span>Voice handling, transcript per turn</span>
+                </div>
+                <div className="docs-arch-arrow" aria-hidden>→</div>
+                <div className="docs-arch-cell">
+                  <span className="docs-arch-cell-num">03</span>
+                  <strong>Django + Anna</strong>
+                  <span>Claude tool loop, persists to Postgres</span>
+                </div>
+                <div className="docs-arch-arrow" aria-hidden>→</div>
+                <div className="docs-arch-cell">
+                  <span className="docs-arch-cell-num">04</span>
+                  <strong>Next.js dashboard</strong>
+                  <span>Server components, live KPIs, quote PDFs</span>
+                </div>
+              </div>
+            </section>
 
-        {/* FINAL CTA */}
-        <section className="shell section-tight">
-          <div className="final-cta">
-            <span className="final-cta-mark"><Flame /></span>
-            <h2 className="final-cta-title">
-              The whole thing is yours. Fork it, deploy it, sell it under your own brand.
-            </h2>
-            <p className="final-cta-sub">
-              AGPL-3.0 by default; commercial license available for white-label and closed-source
-              forks. The dashboard you've been scrolling through is the one you'll get.
-            </p>
-            <div className="final-cta-actions">
-              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="btn btn-onDark">
-                <Github /> Clone on GitHub
-              </a>
-              <Link href="/login" className="btn btn-onDark-ghost">
-                Sign in to dashboard
-              </Link>
-            </div>
-          </div>
-        </section>
+            <section id="stack" className="docs-section">
+              <h2 className="docs-h2">What&rsquo;s in the repo</h2>
+              <p className="docs-p">
+                Every box below is wired up in code. Click the path to jump straight to
+                the file on GitHub.
+              </p>
+              <div className="docs-stack-grid">
+                {STACK.map((s) => (
+                  <article className="docs-stack-card" key={s.title}>
+                    <span className="docs-stack-tag">{s.tag}</span>
+                    <h3 className="docs-stack-title">{s.title}</h3>
+                    <p className="docs-stack-body">{s.body}</p>
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="docs-stack-code"
+                    >
+                      <code>{s.codeHint}</code>
+                      <span aria-hidden>↗</span>
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </section>
 
-        {/* FOOTER */}
-        <footer className="shell footer">
-          <div>
-            <div className="brand" style={{ marginBottom: 12 }}>
-              <span className="brand-mark"><Flame /></span>
-              <span>Hearthline</span>
-              <span className="oss-pill">AGPL-3.0</span>
-            </div>
-            <p className="footer-tag">
-              Open-source AI front-desk for home-service teams.
-              Built in public by <a href={YT_URL} target="_blank" rel="noreferrer">@codewithmuh</a>.
-            </p>
-          </div>
-          <div className="footer-col">
-            <h5>Code</h5>
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer">GitHub repo</a>
-            <a href="#run">Quick start</a>
-            <a href="#stack">Stack</a>
-            <a href="#roadmap">Roadmap</a>
-          </div>
-          <div className="footer-col">
-            <h5>Build along</h5>
-            <a href={YT_URL} target="_blank" rel="noreferrer">YouTube channel</a>
-            <a href="https://x.com/codewithmuh" target="_blank" rel="noreferrer">@codewithmuh on X</a>
-          </div>
-          <div className="footer-col">
-            <h5>Legal</h5>
-            <a href={`${GITHUB_URL}/blob/main/LICENSE`} target="_blank" rel="noreferrer">AGPL-3.0 License</a>
-            <a href={`${GITHUB_URL}/blob/main/COMMERCIAL.md`} target="_blank" rel="noreferrer">Commercial license</a>
-          </div>
-          <div className="footer-bottom">
-            <span>© {new Date().getFullYear()} Hearthline. Open-source under AGPL-3.0.</span>
-            <span>Next.js · Django · Vapi · Twilio · Claude · Postgres</span>
-          </div>
-        </footer>
+            <section id="pipeline" className="docs-section">
+              <h2 className="docs-h2">Anna&rsquo;s agent loop</h2>
+              <p className="docs-p">
+                Six stages, each one a single function, webhook, or tool dispatch in the
+                codebase. Trace it with your IDE in five minutes.
+              </p>
+              <ol className="docs-pipeline">
+                {PIPELINE.map((s, i) => (
+                  <li key={s.stage} className="docs-pipeline-step">
+                    <span className="docs-pipeline-num">{String(i + 1).padStart(2, "0")}</span>
+                    <div>
+                      <div className="docs-pipeline-stage">{s.stage}</div>
+                      <a
+                        href={s.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="docs-pipeline-code"
+                      >
+                        <code>{s.code}</code>
+                        <span aria-hidden>↗</span>
+                      </a>
+                      <p className="docs-pipeline-body">{s.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+
+            <section id="voice" className="docs-section">
+              <h2 className="docs-h2">Wiring real voice</h2>
+              <p className="docs-p">
+                Drop your Vapi key in <code>.env</code> and point the assistant webhook at
+                a tunnel of your local backend (or your deployed URL):
+              </p>
+              <pre className="docs-code docs-code-mini">
+                <code>https://&lt;your-host&gt;/api/calls/webhooks/vapi/</code>
+              </pre>
+              <p className="docs-p">
+                The custom-LLM completions endpoint lives at{" "}
+                <code>/api/calls/vapi/chat/completions/</code> — Vapi POSTs the running
+                transcript on every turn and Anna's loop returns the next utterance.
+              </p>
+            </section>
+
+            <section id="demo-data" className="docs-section">
+              <h2 className="docs-h2">Seed demo data</h2>
+              <p className="docs-p">
+                One management command. Wipes the existing demo set and inserts 8 leads,
+                5 calls, 4 quotes — enough to see every dashboard view come alive.
+              </p>
+              <pre className="docs-code docs-code-mini">
+                <code>{`docker compose exec backend \\
+  python manage.py seed_demo --wipe`}</code>
+              </pre>
+            </section>
+
+            <section id="roadmap" className="docs-section">
+              <h2 className="docs-h2">Roadmap</h2>
+              <p className="docs-p">
+                Pull requests welcome. Each line below is a real GitHub issue.
+              </p>
+              <div className="docs-roadmap">
+                <RoadmapCol title="Shipped" tone="done" items={ROADMAP.done} />
+                <RoadmapCol title="In progress" tone="wip" items={ROADMAP.wip} />
+                <RoadmapCol title="Open issues" tone="todo" items={ROADMAP.todo} />
+              </div>
+            </section>
+
+            <section id="license" className="docs-section">
+              <h2 className="docs-h2">License</h2>
+              <p className="docs-p">
+                The reference implementation is published under the{" "}
+                <a
+                  href={`${GITHUB_URL}/blob/main/LICENSE`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  GNU AGPL-3.0
+                </a>
+                . A separate commercial license is available for white-labeling,
+                reselling, or embedding Hearthline in closed-source products — email{" "}
+                <a href="mailto:contact@codewithmuh.com">contact@codewithmuh.com</a>.
+              </p>
+              <div className="docs-cta">
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn-primary"
+                >
+                  ★ Clone on GitHub
+                </a>
+                <Link href="/login" className="btn btn-ghost">
+                  Sign in to dashboard
+                </Link>
+              </div>
+            </section>
+          </article>
+        </div>
+
+        <MarketingFooter />
       </main>
     </>
   );
 }
 
-function RoadmapCol({ title, tone, items }: { title: string; tone: "done" | "wip" | "todo"; items: string[] }) {
+function RoadmapCol({
+  title,
+  tone,
+  items,
+}: {
+  title: string;
+  tone: "done" | "wip" | "todo";
+  items: string[];
+}) {
   const symbol = tone === "done" ? "✓" : tone === "wip" ? "·" : "○";
   return (
-    <div className={`roadmap-col tone-${tone}`}>
-      <h3>{title} <span className="roadmap-count">{items.length}</span></h3>
+    <div className={`docs-roadmap-col tone-${tone}`}>
+      <h3>
+        {title} <span className="docs-roadmap-count">{items.length}</span>
+      </h3>
       <ul>
         {items.map((it) => (
-          <li key={it}><span className="roadmap-bullet">{symbol}</span>{it}</li>
+          <li key={it}>
+            <span className="docs-roadmap-bullet">{symbol}</span>
+            {it}
+          </li>
         ))}
       </ul>
     </div>
-  );
-}
-
-function Flame() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-      <path d="M8.5 14.5A2.5 2.5 0 0 0 11 17c1.5 0 2.5-.5 3-1.5 1-1.6.6-3.4-1-5-1.6-1.6-2-3.4-1-5C12.5 4 12 3 11 2.5 9.5 2 8 2.5 7 4 5.5 6 5 9 6.5 11c.5 1 .5 2.5-.5 3.5z" />
-    </svg>
-  );
-}
-
-function Github() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden>
-      <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.13 0 1.54-.01 2.79-.01 3.16 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z"/>
-    </svg>
   );
 }

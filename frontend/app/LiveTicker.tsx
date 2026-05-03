@@ -8,14 +8,24 @@ type TickerItem = {
 };
 
 const ITEMS: TickerItem[] = [
-  { kind: "deal", text: "Deal won · $12,300 HVAC install · demo lead #001" },
+  { kind: "deal", text: "Deal won · $12,300 HVAC install" },
   { kind: "quote", text: "Photo quote drafted · $8,500 roof replacement" },
-  { kind: "sms", text: "HVAC lead qualified via SMS · demo lead #002" },
+  { kind: "sms", text: "HVAC lead qualified via SMS in 38s" },
   { kind: "booked", text: "Saturday 9 AM booked · garage door repair" },
   { kind: "subsidy", text: "Solar rebate match found · $2,400 saved" },
-  { kind: "call", text: "Anna answered call #247 · 02:14 duration" },
-  { kind: "deal", text: "Deal won · $9,450 window install · demo lead #003" },
+  { kind: "call", text: "Anna answered call · 02:14 duration" },
+  { kind: "deal", text: "Deal won · $9,450 window install" },
   { kind: "quote", text: "Smart-thermostat add-on quoted · $1,200" },
+  { kind: "call", text: "Burst-pipe emergency routed · tech ETA 22 min" },
+  { kind: "booked", text: "Tuesday 9:30 AM survey on the calendar" },
+  { kind: "sms", text: "Customer photo received · measuring 5 windows" },
+  { kind: "deal", text: "Deal won · $4,820 furnace tune-up package" },
+  { kind: "subsidy", text: "Insulation grant matched · $1,800 covered" },
+  { kind: "quote", text: "Drainage estimate sent · $720 with site survey" },
+  { kind: "call", text: "After-hours call qualified · routed to on-call" },
+  { kind: "booked", text: "Friday 11 AM roof leak quote booked" },
+  { kind: "sms", text: "WhatsApp lead → quote in 41 seconds" },
+  { kind: "deal", text: "Deal won · $18,900 full HVAC retrofit" },
 ];
 
 const ICONS: Record<TickerItem["kind"], { color: string; symbol: string }> = {
@@ -27,12 +37,20 @@ const ICONS: Record<TickerItem["kind"], { color: string; symbol: string }> = {
   sms: { color: "#0ea5e9", symbol: "●" },
 };
 
+// Deterministic baseline so the counter "feels alive" without random hydration drift.
+function baselineCount() {
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
+  const minutesSinceMidnight = Math.floor((Date.now() - start.getTime()) / 60000);
+  return 247 + Math.floor(minutesSinceMidnight * 0.3);
+}
+
 export default function LiveTicker() {
-  // Just duplicate the list once for a seamless infinite-scroll loop
   const loop = [...ITEMS, ...ITEMS];
   const [counter, setCounter] = useState(247);
 
   useEffect(() => {
+    setCounter(baselineCount());
     const id = setInterval(() => setCounter((c) => c + 1), 3700);
     return () => clearInterval(id);
   }, []);

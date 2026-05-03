@@ -20,19 +20,24 @@ type Row = {
   ageSec: number;
 };
 
-const ASSISTANTS = ["Anna", "Thomas", "Julie", "Marie", "Leo"];
-// Demo data — placeholder contact info so nothing on the landing page looks
-// like a real person's phone/email. Uses 000-prefix numbers and example.test
-// emails (both reserved for documentation / fictional use).
+// Same Anna across every channel — keeps brand consistent.
+const ASSISTANTS: Array<[string, string]> = [
+  ["Anna", "phone"],
+  ["Anna", "SMS"],
+  ["Anna", "WhatsApp"],
+  ["Anna", "web chat"],
+  ["Anna", "email"],
+];
+// Business-style demo names — feels real but is obviously not personal PII.
 const NAMES: Array<[string, string]> = [
-  ["Customer 001", "+1 (000) 123-4567"],
-  ["Customer 002", "demo-002@example.test"],
-  ["Customer 003", "+1 (000) 234-5678"],
-  ["Customer 004", "demo-004@example.test"],
-  ["Customer 005", "+1 (000) 345-6789"],
-  ["Customer 006", "demo-006@example.test"],
-  ["Customer 007", "+1 (000) 456-7890"],
-  ["Customer 008", "demo-008@example.test"],
+  ["Bay Area Roofing", "+1 (000) 123-4567"],
+  ["Acme HVAC Co.", "demo-002@example.test"],
+  ["North Pine Windows", "+1 (000) 234-5678"],
+  ["Stonebridge Solar", "demo-004@example.test"],
+  ["Riverbend Plumbing", "+1 (000) 345-6789"],
+  ["Cypress Garage Doors", "demo-006@example.test"],
+  ["Westwood Electrical", "+1 (000) 456-7890"],
+  ["Elm Street Landscaping", "demo-008@example.test"],
 ];
 const MESSAGES: Array<{ msg: string; action: Action }> = [
   { msg: "Confirmed — proceed with the HVAC install for Tuesday.", action: { kind: "deal-won", amount: 12300 } },
@@ -47,14 +52,14 @@ const MESSAGES: Array<{ msg: string; action: Action }> = [
 
 function pickRowAt(id: number, idx: number): Row {
   const [contact, contactSub] = NAMES[idx % NAMES.length];
-  const assistant = ASSISTANTS[idx % ASSISTANTS.length];
+  const [name, channel] = ASSISTANTS[idx % ASSISTANTS.length];
   const m = MESSAGES[idx % MESSAGES.length];
   return {
     id,
     contact,
     contactSub,
-    assistant,
-    initial: assistant[0],
+    assistant: `${name} · ${channel}`,
+    initial: name[0],
     message: m.msg,
     action: m.action,
     ageSec: 0,
@@ -63,14 +68,14 @@ function pickRowAt(id: number, idx: number): Row {
 
 function pickRandomRow(id: number): Row {
   const [contact, contactSub] = NAMES[Math.floor(Math.random() * NAMES.length)];
-  const assistant = ASSISTANTS[Math.floor(Math.random() * ASSISTANTS.length)];
+  const [name, channel] = ASSISTANTS[Math.floor(Math.random() * ASSISTANTS.length)];
   const m = MESSAGES[Math.floor(Math.random() * MESSAGES.length)];
   return {
     id,
     contact,
     contactSub,
-    assistant,
-    initial: assistant[0],
+    assistant: `${name} · ${channel}`,
+    initial: name[0],
     message: m.msg,
     action: m.action,
     ageSec: 0,
@@ -162,7 +167,7 @@ export default function MockDashboard() {
               <button className="mock-icon-btn" aria-label="Notifications">
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
               </button>
-              <span className="mock-avatar">JD</span>
+              <span className="mock-avatar" aria-label="Owner avatar">RS</span>
             </div>
           </div>
 

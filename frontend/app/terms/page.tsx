@@ -108,7 +108,7 @@ export default function TermsPage() {
             <h2>10. Termination</h2>
             <p>
               You can cancel anytime from the dashboard or by emailing{" "}
-              <a href="mailto:billing@hearthline.example">billing@hearthline.example</a>. On
+              <a href="mailto:billing@codewithmuh.com">billing@codewithmuh.com</a>. On
               cancellation we keep your data in cold storage for 30 days, then permanently
               delete it.
             </p>
@@ -129,7 +129,7 @@ export default function TermsPage() {
             <h2>13. Contact</h2>
             <p>
               Questions? Reach us at{" "}
-              <a href="mailto:legal@hearthline.example">legal@hearthline.example</a>.
+              <a href="mailto:legal@codewithmuh.com">legal@codewithmuh.com</a>.
             </p>
           </article>
         </section>

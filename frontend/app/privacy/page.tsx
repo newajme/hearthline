@@ -91,16 +91,15 @@ export default function PrivacyPage() {
             <p>
               You and your customers have the right to access, correct, export, or delete
               personal data we hold. Contact{" "}
-              <a href="mailto:privacy@hearthline.example">privacy@hearthline.example</a> and
+              <a href="mailto:privacy@codewithmuh.com">privacy@codewithmuh.com</a> and
               we will respond within 30 days.
             </p>
 
             <h2>6. Security</h2>
             <ul>
               <li>TLS 1.3 in transit, AES-256 at rest.</li>
-              <li>SOC 2 Type II audited annually.</li>
-              <li>Single-tenant Postgres available on Enterprise plans.</li>
-              <li>Quarterly third-party penetration tests.</li>
+              <li>Single-tenant Postgres available on managed deployments.</li>
+              <li>SOC 2 Type II audit and quarterly external penetration tests are on the roadmap as the hosted offering matures.</li>
             </ul>
 
             <h2>7. Cookies</h2>
@@ -119,7 +118,7 @@ export default function PrivacyPage() {
             <h2>9. Contact</h2>
             <p>
               Questions? Reach the data-protection team at{" "}
-              <a href="mailto:privacy@hearthline.example">privacy@hearthline.example</a>.
+              <a href="mailto:privacy@codewithmuh.com">privacy@codewithmuh.com</a>.
             </p>
           </article>
         </section>

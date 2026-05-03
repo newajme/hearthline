@@ -8,6 +8,7 @@ export default function LoginForm({ next }: { next: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -71,17 +72,27 @@ export default function LoginForm({ next }: { next: string }) {
         />
 
         <label className="auth-label" htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          className="auth-input"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-        />
+        <div className="auth-input-wrap">
+          <input
+            id="password"
+            name="password"
+            type={showPw ? "text" : "password"}
+            autoComplete="current-password"
+            required
+            className="auth-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
+          <button
+            type="button"
+            className="auth-input-toggle"
+            onClick={() => setShowPw((v) => !v)}
+            aria-label={showPw ? "Hide password" : "Show password"}
+          >
+            {showPw ? "Hide" : "Show"}
+          </button>
+        </div>
 
         <button type="submit" className="btn btn-primary auth-submit" disabled={busy}>
           {busy ? "Signing in…" : "Sign in"}
@@ -95,7 +106,7 @@ export default function LoginForm({ next }: { next: string }) {
       </form>
 
       <p className="auth-back">
-        <Link href="/">← Back to hearthline.com</Link>
+        <Link href="/">← Back to home</Link>
       </p>
     </main>
   );

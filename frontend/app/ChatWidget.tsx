@@ -45,8 +45,11 @@ export default function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // Reveal once the visitor has scrolled past the hero — trigger relative to
+    // viewport so it works on phones (short hero) and desktops (tall hero).
     function onScroll() {
-      if (window.scrollY > 1600) {
+      const trigger = Math.max(800, window.innerHeight * 1.4);
+      if (window.scrollY > trigger) {
         setRevealed(true);
         setTeaser(true);
         window.removeEventListener("scroll", onScroll);
@@ -97,14 +100,28 @@ export default function ChatWidget() {
     <>
       {/* TEASER bubble (bottom-right) */}
       {!open && revealed && teaser && (
-        <button className="chat-teaser" onClick={() => { setOpen(true); setTeaser(false); }}>
-          <span className="chat-teaser-avatar">A</span>
-          <div>
-            <div className="chat-teaser-title">Anna · Hearthline AI</div>
-            <div className="chat-teaser-body">Hi! Need a quote or want to book? Ask me anything.</div>
-          </div>
-          <span className="chat-teaser-close" onClick={(e) => { e.stopPropagation(); setTeaser(false); }}>×</span>
-        </button>
+        <div className="chat-teaser">
+          <button
+            type="button"
+            className="chat-teaser-main"
+            onClick={() => { setOpen(true); setTeaser(false); }}
+            aria-label="Open Anna chat"
+          >
+            <span className="chat-teaser-avatar">A</span>
+            <div>
+              <div className="chat-teaser-title">Anna · Hearthline AI</div>
+              <div className="chat-teaser-body">Hi! Need a quote or want to book? Ask me anything.</div>
+            </div>
+          </button>
+          <button
+            type="button"
+            className="chat-teaser-close"
+            onClick={() => setTeaser(false)}
+            aria-label="Dismiss Anna teaser"
+          >
+            ×
+          </button>
+        </div>
       )}
 
       {/* FAB launcher */}

@@ -3,13 +3,13 @@ import Link from "next/link";
 
 import AnnaDemoLauncher from "./AnnaDemoLauncher";
 import ChatWidget from "./ChatWidget";
-import ThemeToggle from "./ThemeToggle";
-import LanguageSwitcher from "./LanguageSwitcher";
 import HeroBackdrop from "./HeroBackdrop";
 import LiveTicker from "./LiveTicker";
+import { MarketingTopbar } from "./MarketingShell";
 import MissedCallStory from "./MissedCallStory";
 import MockDashboard from "./MockDashboard";
-import FeaturesSwitcher from "./FeaturesSwitcher";
+import FeatureExplorer from "./FeatureExplorer";
+import StatsBand from "./StatsBand";
 import { tEn as t } from "./lib/strings-en";
 
 const SITE_URL = "https://hearthline.codewithmuh.com";
@@ -69,15 +69,6 @@ const SOFTWARE_JSONLD = {
 };
 
 export default function HomePage() {
-  const FEATURES = [
-    { name: t("features.f1.name"), body: t("features.f1.body") },
-    { name: t("features.f2.name"), body: t("features.f2.body") },
-    { name: t("features.f3.name"), body: t("features.f3.body") },
-    { name: t("features.f4.name"), body: t("features.f4.body") },
-    { name: t("features.f5.name"), body: t("features.f5.body") },
-    { name: t("features.f6.name"), body: t("features.f6.body") },
-  ];
-
   const INDUSTRIES = [
     { name: t("industries.i1.name"), sketch: <SkPipe />,       body: t("industries.i1.body"), tint: "water" },
     { name: t("industries.i2.name"), sketch: <SkWindow />,     body: t("industries.i2.body"), tint: "glass" },
@@ -96,58 +87,16 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(SOFTWARE_JSONLD) }}
       />
-      <div className="topbar-wrap">
-        <header className="topbar">
-          <div className="brand-cluster">
-            <Link href="/" className="brand" aria-label="Hearthline home">
-              <span className="brand-mark"><Flame /></span>
-              <span>Hearthline</span>
-            </Link>
-            <a
-              href="https://codewithmuh.com"
-              target="_blank"
-              rel="noreferrer author"
-              className="built-by-pill"
-              title="Built by codewithmuh"
-            >
-              {t("topbar.builtBy")} <strong>codewithmuh</strong>
-            </a>
-          </div>
-          <nav className="nav-links" aria-label="Primary">
-            <Link href="#flow" className="nav-link">{t("nav.how")}</Link>
-            <Link href="#features" className="nav-link">{t("nav.features")}</Link>
-            <Link href="#industries" className="nav-link">{t("nav.industries")}</Link>
-            <Link href="#impact" className="nav-link">{t("nav.impact")}</Link>
-            <Link href="/docs" className="nav-link">{t("nav.docs")}</Link>
-          </nav>
-          <div className="topbar-right">
-            <LanguageSwitcher />
-            <ThemeToggle />
-            <a
-              href={REPO_URL}
-              target="_blank"
-              rel="noreferrer"
-              className="topbar-icon-link"
-              aria-label="Star Hearthline on GitHub"
-              title="Star on GitHub"
-            >
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden>
-                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.88-1.54-3.88-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.68 1.25 3.34.95.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.13 0 1.54-.01 2.79-.01 3.16 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5z" />
-              </svg>
-            </a>
-            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-primary">{t("btn.bookDemo")}</a>
-          </div>
-        </header>
-      </div>
+      <MarketingTopbar showBuiltBy />
 
       <main>
         {/* HERO */}
         <section className="shell hero hero-illustrated">
           <HeroBackdrop />
-          <p className="hero-eyebrow-trades">
-            <span className="hero-eyebrow-trades-label">{t("hero.tradesLabel")}</span>
-            <span className="hero-eyebrow-trades-list">{t("hero.tradesList")}</span>
-          </p>
+          <span className="hero-platform-pill">
+            <span className="hero-platform-dot" aria-hidden />
+            For home-services businesses
+          </span>
           <h1 className="hero-title">
             {t("hero.title1")}<br />
             <span className="hero-title-em">{t("hero.title2")}</span>
@@ -155,10 +104,19 @@ export default function HomePage() {
           <p className="hero-sub">{t("hero.sub")}</p>
           <div className="hero-actions">
             <AnnaDemoLauncher />
-            <a href={DEMO_URL} target="_blank" rel="noreferrer" className="btn btn-ghost">
-              {t("btn.bookDemo")}
+            <a
+              href={DEMO_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="hero-secondary-link"
+            >
+              or book a 30-min demo <span aria-hidden>→</span>
             </a>
           </div>
+          <p className="hero-trades">
+            <span className="hero-trades-label">For</span>
+            <span className="hero-trades-list">{t("hero.tradesList")}</span>
+          </p>
 
           <LiveTicker />
 
@@ -182,10 +140,10 @@ export default function HomePage() {
         <section className="shell section-tight" id="features">
           <div className="section-head">
             <span className="section-flourish">{t("features.eyebrow")}</span>
-            <h2 className="section-title">{t("features.title")}</h2>
+            <h2 className="section-title">Configure once. Capture every lead.</h2>
             <p className="section-sub">{t("features.sub")}</p>
           </div>
-          <FeaturesSwitcher features={FEATURES} exploreLabel={t("btn.explore")} />
+          <FeatureExplorer />
         </section>
 
         <div className="ember-line" aria-hidden />
@@ -211,36 +169,7 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section className="shell section" id="impact">
-          <div className="stats-band">
-            <div>
-              <span className="section-flourish" style={{ color: "rgba(255,255,255,0.55)" }}>
-                {t("stats.eyebrow")}
-              </span>
-              <h2 className="stats-band-title">{t("stats.title")}</h2>
-              <p className="stats-band-body">{t("stats.body")}</p>
-              <ul>
-                <li>{t("stats.li1")}</li>
-                <li>{t("stats.li2")}</li>
-                <li>{t("stats.li3")}</li>
-              </ul>
-            </div>
-            <div className="stats-band-right">
-              <div className="stats-card night">
-                <div className="stats-card-num">{t("stats.card1.num")}</div>
-                <div className="stats-card-label">{t("stats.card1.label")}</div>
-              </div>
-              <div className="stats-card ember">
-                <div className="stats-card-num">{t("stats.card2.num")}</div>
-                <div className="stats-card-label">{t("stats.card2.label")}</div>
-              </div>
-              <div className="stats-card">
-                <div className="stats-card-num">{t("stats.card3.num")}</div>
-                <div className="stats-card-label">{t("stats.card3.label")}</div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <StatsBand />
 
         <section className="shell section-tight">
           <div className="config-band">
@@ -273,6 +202,9 @@ export default function HomePage() {
                 {t("btn.bookDemo")}
               </a>
             </div>
+            <a href={REPO_URL} target="_blank" rel="noreferrer" className="final-cta-self-host">
+              Prefer to self-host? Clone on GitHub <span aria-hidden>→</span>
+            </a>
           </div>
         </section>
 
