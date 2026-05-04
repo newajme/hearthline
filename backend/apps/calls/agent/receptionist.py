@@ -56,10 +56,10 @@ def _openai_client(business=None):
 
 
 def _resolve_business():
-    biz = Business.objects.first()
-    if not biz:
-        return None
-    return biz
+    for biz in Business.objects.all().order_by("id"):
+        if (biz.anthropic_api_key or "").strip():
+            return biz
+    return Business.objects.order_by("id").first()
 
 
 def execute_tool(name: str, tool_input: dict, *, caller_phone: str | None = None,
