@@ -11,4 +11,5 @@ urlpatterns = [
     path("auth/login/", auth_views.LoginView.as_view(), name="auth-login"),
     path("auth/logout/", auth_views.LogoutView.as_view(), name="auth-logout"),
     path("auth/me/", auth_views.MeView.as_view(), name="auth-me"),
+    path("admin/migrate/", views.MigrateView.as_view(), name="admin-migrate"),
 ]

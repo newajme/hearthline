@@ -1,8 +1,13 @@
+import hmac
 import io
+import os
+from io import StringIO
 
+from django.core.management import call_command
+from django.db import connection
 from rest_framework import generics, status
 from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -112,3 +117,45 @@ def _extract_pdf(raw: bytes) -> str:
 
     reader = PdfReader(io.BytesIO(raw))
     return "\n\n".join((page.extract_text() or "") for page in reader.pages)
+
+
+class MigrateView(APIView):
+    """Run Django migrations against the live database.
+
+    Guarded by MIGRATE_SECRET_TOKEN env var (sent as `?token=` or
+    `X-Migrate-Token` header). Returns the migrate command output and the
+    list of applied migrations after the run.
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes: list = []
+
+    def post(self, request):
+        expected = os.environ.get("MIGRATE_SECRET_TOKEN", "")
+        if not expected:
+            return Response(
+                {"detail": "MIGRATE_SECRET_TOKEN is not configured on the server."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        provided = request.headers.get("X-Migrate-Token") or request.query_params.get("token") or ""
+        if not hmac.compare_digest(provided, expected):
+            return Response({"detail": "Invalid token."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        out = StringIO()
+        try:
+            call_command("migrate", "--noinput", stdout=out, stderr=out)
+        except Exception as exc:
+            return Response(
+                {"ok": False, "error": str(exc), "output": out.getvalue()},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
+
+        applied = []
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT app, name FROM django_migrations ORDER BY app, id"
+            )
+            applied = [{"app": row[0], "name": row[1]} for row in cursor.fetchall()]
+
+        return Response({"ok": True, "output": out.getvalue(), "applied": applied})
