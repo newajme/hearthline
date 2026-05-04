@@ -54,6 +54,10 @@ up the phone.
   a real PDF estimate in <60s with line items, tax, and total.
 - **🌍 10 languages out of the box** — English, Spanish, German, French,
   Italian, Portuguese, Dutch, Chinese, Japanese, Arabic (RTL).
+- **📱 Mobile apps** *(coming soon)* — Native iPhone (SwiftUI) and Android
+  (Kotlin/Compose) companion apps point at the same Django backend. Push
+  alerts when Anna books a job, lead detail + conversation timeline, photo
+  quotes openable and editable in-app. Self-hosters set their own API URL.
 - **🚐 Tech dispatch** *(roadmap)* — Booked job auto-routes to the closest
   tech with GPS + ETA SMS.
 - **💳 Payments + reviews** *(roadmap)* — Stripe deposit on quote acceptance,
@@ -245,6 +249,9 @@ fallbacks — so each business runs on their own AI usage account.
 - 🔨 Stripe checkout for deposit collection on quote acceptance
 - 🔨 Outbound SMS / WhatsApp via Twilio for quote delivery
 - 🔨 Multi-tenant auth (today: single business per deployment, no shared cluster)
+- 🔨 Native iOS + Android companion apps (push alerts, leads, calls, photo
+  quotes) — backend ships APNs/FCM register endpoints today; apps land on
+  the stores closer to launch
 
 **Open issues — good first PRs**
 - ⭕ Subsidy lookup integration (solar / energy renovation)

@@ -7981,7 +7981,7 @@ html[dir="rtl"] .pipeline-num { direction: ltr; unicode-bidi: isolate; }
 }
 
 /* ---- bubble-in animation safe — ensure backgrounds don't flash white ---- */
-[data-theme="dark"] @keyframes bubble-in-dark { from { background: var(--surface); } }
+@keyframes bubble-in-dark { from { background: var(--surface); } }
 
 /* ---- Print / fallback safety: leave .pill rule but un-force color ---- */
 [data-theme="dark"] .pill,
@@ -9627,4 +9627,168 @@ html[dir="rtl"] .pipeline-num { direction: ltr; unicode-bidi: isolate; }
   display: inline-flex;
   align-items: center;
   gap: 6px;
+}
+
+/* ---- Mobile apps band ---------------------------------------------- */
+.apps-band {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+  max-width: 1180px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+@media (min-width: 880px) {
+  .apps-band {
+    grid-template-columns: 1.15fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+}
+.apps-band-title {
+  font-family: var(--font-serif);
+  margin: 8px 0 14px;
+  font-size: clamp(30px, 3.8vw, 46px);
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  line-height: 1.05;
+  font-variation-settings: "SOFT" 50, "opsz" 144;
+}
+.apps-band-body {
+  color: var(--muted);
+  font-size: 15.5px;
+  line-height: 1.6;
+  max-width: 560px;
+  margin: 0 0 24px;
+}
+.apps-band-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 14px 0 0;
+  max-width: 540px;
+}
+
+.apps-feature-list {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 600px) {
+  .apps-feature-list { grid-template-columns: 1fr 1fr; }
+}
+.apps-feature-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+}
+.apps-feature-list strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 2px;
+}
+.apps-feature-list p {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.apps-feature-icon {
+  font-size: 22px;
+  line-height: 1;
+  flex: 0 0 auto;
+  margin-top: 1px;
+}
+
+.apps-store-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.apps-store-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 16px 9px 12px;
+  border-radius: 12px;
+  background: #0b0b0f;
+  color: #fff;
+  min-width: 184px;
+}
+.apps-store-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+.apps-store-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.apps-store-top {
+  font-size: 9.5px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+.apps-store-bottom {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.apps-band-art {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 420px;
+}
+.apps-phone-frame {
+  position: relative;
+  z-index: 2;
+  border-radius: 38px;
+  padding: 6px;
+  background: linear-gradient(180deg, #1a1614 0%, #2a201b 100%);
+  box-shadow:
+    0 30px 60px -20px rgba(26, 22, 20, 0.45),
+    0 12px 24px -10px rgba(26, 22, 20, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  transform: rotate(-2deg);
+  transition: transform 0.4s ease;
+}
+.apps-phone-frame:hover { transform: rotate(0deg) translateY(-4px); }
+.apps-phone-img {
+  display: block;
+  width: 260px;
+  height: auto;
+  border-radius: 32px;
+}
+@media (min-width: 880px) {
+  .apps-phone-img { width: 300px; }
+}
+.apps-art-glow {
+  position: absolute;
+  inset: 8% 8%;
+  background: radial-gradient(circle at 50% 50%, rgba(180, 83, 10, 0.22), transparent 60%);
+  filter: blur(40px);
+  z-index: 1;
+  pointer-events: none;
 }

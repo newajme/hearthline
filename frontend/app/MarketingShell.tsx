@@ -17,8 +17,6 @@ function defaultLinks(t: (k: string) => string): NavLink[] {
     { href: "/#story", label: t("nav.how") },
     { href: "/#features", label: t("nav.features") },
     { href: "/#industries", label: t("nav.industries") },
-    { href: "/#impact", label: t("nav.impact") },
-    { href: "/docs", label: t("nav.docs") },
   ];
 }
 
@@ -189,6 +187,7 @@ function MarketingFooterInner() {
         <h5>{t("footer.product")}</h5>
         <Link href="/#features">{t("nav.features")}</Link>
         <Link href="/#industries">{t("nav.industries")}</Link>
+        <Link href="/#apps">Mobile apps</Link>
         <Link href="/login">{t("btn.signIn")}</Link>
       </div>
       <div className="footer-col">

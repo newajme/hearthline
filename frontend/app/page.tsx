@@ -7,6 +7,7 @@ import HeroBackdrop from "./HeroBackdrop";
 import LiveTicker from "./LiveTicker";
 import { MarketingTopbar } from "./MarketingShell";
 import MissedCallStory from "./MissedCallStory";
+import MobileAppsBand from "./MobileAppsBand";
 import MockDashboard from "./MockDashboard";
 import FeatureExplorer from "./FeatureExplorer";
 import StatsBand from "./StatsBand";
@@ -171,6 +172,10 @@ export default async function HomePage() {
           </p>
         </section>
 
+        <MobileAppsBand />
+
+        <div className="ember-line" aria-hidden />
+
         <StatsBand />
 
         <section className="shell section-tight">
@@ -241,7 +246,7 @@ export default async function HomePage() {
             <div className="creator-credit-text">
               <p className="creator-credit-eyebrow">{t("footer.builtBy")}</p>
               <a href="https://codewithmuh.com" target="_blank" rel="noreferrer author" className="creator-credit-name">
-                Muhammad Rashid Daha · <span>codewithmuh.com</span>
+                Muhammad Rashid · <span>codewithmuh.com</span>
               </a>
               <p className="creator-credit-bio">{t("footer.bio")}</p>
             </div>
