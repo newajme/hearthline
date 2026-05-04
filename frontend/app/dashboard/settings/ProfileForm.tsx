@@ -1,0 +1,163 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import type { Business } from "../lib";
+import { patchBusiness } from "./api";
+
+const TRADES = [
+  "windows", "roofing", "hvac", "plumbing", "solar", "doors",
+  "renovation", "electrical", "landscaping", "cleaning", "pest_control", "general",
+];
+const TIMEZONES = [
+  "America/Los_Angeles", "America/Denver", "America/Chicago", "America/New_York",
+  "Europe/London", "Europe/Paris", "Europe/Madrid", "Asia/Dubai", "Asia/Karachi",
+  "Asia/Singapore", "Australia/Sydney", "UTC",
+];
+
+type FormState = {
+  name: string;
+  trade: string;
+  timezone: string;
+  phone_number: string;
+  voice_persona: string;
+};
+
+function pickEditable(b: Business): FormState {
+  return {
+    name: b.name ?? "",
+    trade: b.trade ?? "",
+    timezone: b.timezone ?? "",
+    phone_number: b.phone_number ?? "",
+    voice_persona: b.voice_persona ?? "",
+  };
+}
+
+export default function ProfileForm({ business }: { business: Business }) {
+  const router = useRouter();
+  const initial = pickEditable(business);
+  const [form, setForm] = useState<FormState>(initial);
+  const [saving, setSaving] = useState(false);
+  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const dirty = JSON.stringify(form) !== JSON.stringify(initial);
+
+  function update<K extends keyof FormState>(key: K, value: FormState[K]) {
+    setForm((f) => ({ ...f, [key]: value }));
+    setSavedAt(null);
+    setError(null);
+  }
+
+  async function onSave() {
+    if (!dirty || saving) return;
+    setSaving(true);
+    setError(null);
+    const res = await patchBusiness(business.id, form);
+    setSaving(false);
+    if (!res.ok) {
+      setError(res.error ?? "Failed to save");
+      return;
+    }
+    setSavedAt(new Date());
+    router.refresh();
+  }
+
+  function onReset() {
+    setForm(initial);
+    setError(null);
+  }
+
+  return (
+    <article className="dash-card settings-profile">
+      <div className="settings-profile-head">
+        <span className="settings-profile-mark">{(form.name || "?").slice(0, 1).toUpperCase()}</span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2 style={{ margin: 0 }}>{form.name || "Untitled business"}</h2>
+          <p className="settings-profile-sub">
+            {form.trade || "—"} · {form.timezone || "UTC"}
+          </p>
+        </div>
+        <div className="settings-saved">
+          {error && <span className="settings-saved-err">{error}</span>}
+          {!error && savedAt && <span className="settings-saved-ok">Saved · {savedAt.toLocaleTimeString()}</span>}
+          {!error && !savedAt && dirty && <span className="settings-saved-dirty">Unsaved changes</span>}
+        </div>
+      </div>
+
+      <div className="settings-form">
+        <Field label="Name" hint="Customer-facing identity.">
+          <input
+            className="text-input"
+            value={form.name}
+            onChange={(e) => update("name", e.target.value)}
+            placeholder="Rolling Shutters Inc."
+          />
+        </Field>
+
+        <Field label="Phone number" hint="Public business line.">
+          <input
+            className="text-input"
+            type="tel"
+            value={form.phone_number}
+            onChange={(e) => update("phone_number", e.target.value)}
+            placeholder="+1 (555) 010-1010"
+          />
+        </Field>
+
+        <Field label="AI persona" hint="Display name Anna uses on calls.">
+          <input
+            className="text-input"
+            value={form.voice_persona}
+            onChange={(e) => update("voice_persona", e.target.value)}
+            placeholder="Anna"
+          />
+        </Field>
+
+        <Field label="Trade" hint="Drives default pricing rules and scripts.">
+          <select
+            className="text-input"
+            value={form.trade}
+            onChange={(e) => update("trade", e.target.value)}
+          >
+            {TRADES.map((t) => (
+              <option key={t} value={t}>{t.replace(/_/g, " ")}</option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label="Timezone" hint="Used for booking + business hours." full>
+          <select
+            className="text-input"
+            value={form.timezone}
+            onChange={(e) => update("timezone", e.target.value)}
+          >
+            {TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
+          </select>
+        </Field>
+      </div>
+
+      <div className="settings-actions">
+        <button type="button" className="btn btn-ghost" onClick={onReset} disabled={!dirty || saving}>
+          Reset
+        </button>
+        <button type="button" className="btn btn-primary" onClick={onSave} disabled={!dirty || saving}>
+          {saving ? "Saving…" : "Save changes"}
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function Field({
+  label, hint, children, full,
+}: { label: string; hint?: string; children: React.ReactNode; full?: boolean }) {
+  return (
+    <label className={`settings-field ${full ? "settings-field-full" : ""}`}>
+      <span className="settings-field-label">{label}</span>
+      {children}
+      {hint && <span className="settings-field-hint">{hint}</span>}
+    </label>
+  );
+}

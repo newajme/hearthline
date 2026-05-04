@@ -111,17 +111,8 @@ class Command(BaseCommand):
         )
         self.stdout.write(f"  Business: {biz.name} ({'new' if biz_created else 'existing'})")
 
-        # channels
-        channel_specs = [
-            ("phone", "+1 (555) 010-1010"),
-            ("sms", "+1 (555) 010-1010"),
-            ("email", "hi@rolling-shutters.example"),
-            ("whatsapp", "+1 (555) 010-1010"),
-            ("chat", "rolling-shutters.example/chat"),
-        ]
-        for kind, addr in channel_specs:
-            Channel.objects.get_or_create(business=biz, kind=kind, address=addr, defaults={"is_active": True})
-        self.stdout.write(f"  Channels: {biz.channels.count()}")
+        # channels: intentionally not seeded — operators add their own from Settings.
+        self.stdout.write(f"  Channels: {biz.channels.count()} (none seeded by default)")
 
         # customers
         customer_objs: list[Customer] = []

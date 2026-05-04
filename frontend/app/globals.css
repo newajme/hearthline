@@ -4982,6 +4982,74 @@ img { max-width: 100%; display: block; }
   .settings-knowledge { grid-column: 1 / -1; }
 }
 
+/* ---- Settings tabs ---- */
+.settings-tabs {
+  display: flex;
+  gap: 2px;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  margin: 0 0 18px;
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.settings-tabs::-webkit-scrollbar { display: none; }
+.settings-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  border-radius: 0;
+}
+.settings-tab:hover { color: var(--ink); background: var(--surface-2); }
+.settings-tab:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+.settings-tab.is-active {
+  color: var(--brand);
+  border-bottom-color: var(--brand);
+  font-weight: 600;
+  background: transparent;
+}
+.settings-tab-count {
+  font-size: 11.5px;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 1px 8px;
+  line-height: 1.5;
+}
+.settings-tab.is-active .settings-tab-count {
+  background: var(--brand-soft);
+  color: var(--brand);
+  border-color: transparent;
+}
+.settings-pane {
+  display: grid;
+  gap: 16px;
+}
+[data-theme="dark"] .settings-tabs { border-bottom-color: var(--border); }
+[data-theme="dark"] .settings-tab:hover { background: var(--surface-2); color: var(--ink); }
+[data-theme="dark"] .settings-tab-count {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--muted);
+}
+
 .settings-profile-head {
   display: flex;
   gap: 14px;
