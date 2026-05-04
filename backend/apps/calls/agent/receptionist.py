@@ -23,7 +23,16 @@ CLAUDE_MODEL = "claude-sonnet-4-6"
 
 
 def _client(business=None):
-    key = (business.resolved_anthropic_key if business else "") or settings.ANTHROPIC_API_KEY
+    biz_key = (business.resolved_anthropic_key if business else "")
+    env_key = settings.ANTHROPIC_API_KEY
+    key = biz_key or env_key
+    logger.info(
+        "[KEY] biz=%s biz_key_len=%d env_key_len=%d total_businesses=%d",
+        getattr(business, "id", None),
+        len(biz_key or ""),
+        len(env_key or ""),
+        Business.objects.count(),
+    )
     if not key:
         return None
     try:
