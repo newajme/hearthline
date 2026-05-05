@@ -10,11 +10,38 @@ export function fmtAge(iso: string | null | undefined): string {
   return `${d}d ago`;
 }
 
-export function fmtMoney(n: number | string | null | undefined): string {
+// Locale that produces the most natural grouping for the given currency.
+// PKR/INR use the South Asian lakh/crore grouping (1,50,000) which is what
+// people actually read prices as in those markets.
+const CURRENCY_LOCALE: Record<string, string> = {
+  PKR: "en-PK",
+  INR: "en-IN",
+  AED: "en-AE",
+  SAR: "ar-SA",
+  GBP: "en-GB",
+  EUR: "en-IE",
+  CAD: "en-CA",
+  AUD: "en-AU",
+};
+
+export function fmtMoney(
+  n: number | string | null | undefined,
+  currency: string = "USD",
+): string {
   if (n === null || n === undefined || n === "") return "—";
   const num = typeof n === "string" ? parseFloat(n) : n;
   if (Number.isNaN(num)) return "—";
-  return num.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  const cur = (currency || "USD").toUpperCase();
+  const locale = CURRENCY_LOCALE[cur] ?? "en-US";
+  try {
+    return num.toLocaleString(locale, {
+      style: "currency",
+      currency: cur,
+      maximumFractionDigits: 0,
+    });
+  } catch {
+    return `${cur} ${num.toLocaleString(locale, { maximumFractionDigits: 0 })}`;
+  }
 }
 
 export type Lead = {
@@ -68,6 +95,7 @@ export type Business = {
   slug: string;
   trade: string;
   timezone: string;
+  currency: string;
   phone_number: string;
   voice_persona: string;
   knowledge_base: string;

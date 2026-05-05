@@ -14,10 +14,29 @@ class Business(models.Model):
         ("openai", "OpenAI GPT"),
     ]
 
+    # ISO-4217 codes plus the colloquial unit Anna should speak in.
+    # `speak_as` is what the AI is told to read back, so big numbers in PKR
+    # become "1 million" / "fifteen lakh" instead of digit-by-digit.
+    CURRENCY_CHOICES = [
+        ("USD", "US Dollar ($)"),
+        ("EUR", "Euro (€)"),
+        ("GBP", "British Pound (£)"),
+        ("PKR", "Pakistani Rupee (Rs)"),
+        ("INR", "Indian Rupee (₹)"),
+        ("AED", "UAE Dirham (د.إ)"),
+        ("CAD", "Canadian Dollar (C$)"),
+        ("AUD", "Australian Dollar (A$)"),
+        ("SAR", "Saudi Riyal (﷼)"),
+    ]
+
     name = models.CharField(max_length=200)
     slug = models.SlugField(unique=True)
     trade = models.CharField(max_length=32, choices=TRADE_CHOICES, default="general")
     timezone = models.CharField(max_length=64, default="UTC")
+    currency = models.CharField(
+        max_length=3, choices=CURRENCY_CHOICES, default="USD",
+        help_text="ISO-4217 code Anna quotes prices in and the dashboard formats with.",
+    )
     phone_number = models.CharField(max_length=32, blank=True, help_text="Public business line")
     voice_persona = models.CharField(
         max_length=64, default="Anna",

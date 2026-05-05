@@ -3,11 +3,54 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 
+# How big numbers should be SPOKEN out loud, by currency. Speech-to-text in
+# Vapi will otherwise read each digit (one zero zero zero zero zero zero) which
+# makes Anna sound robotic. We hand the model an explicit cheat sheet.
+CURRENCY_SPEAKING_GUIDES = {
+    "USD": (
+        "Currency is US Dollars. Say 'dollars' or '$'. Use natural English: "
+        "'twelve hundred dollars', 'fifteen thousand dollars', 'two and a half million dollars'."
+    ),
+    "EUR": (
+        "Currency is Euros. Say 'euros' or '€'. 'twelve hundred euros', "
+        "'fifteen thousand euros', 'two million euros'."
+    ),
+    "GBP": (
+        "Currency is British Pounds. Say 'pounds'. 'twelve hundred pounds', "
+        "'fifteen thousand pounds', 'two million pounds'."
+    ),
+    "PKR": (
+        "Currency is Pakistani Rupees. Say 'rupees' or 'PKR'. Use Pakistani "
+        "speech conventions: 'fifteen lakh rupees' (1,500,000), 'sixteen lakh "
+        "fifty thousand' (1,650,000), 'one crore rupees' (10,000,000), 'two "
+        "and a half crore' (25,000,000). NEVER read digits like 'one zero zero "
+        "zero zero zero zero'. NEVER say 'one million five hundred thousand' "
+        "in Pakistan — say 'fifteen lakh' instead."
+    ),
+    "INR": (
+        "Currency is Indian Rupees. Say 'rupees' or '₹'. Use Indian conventions: "
+        "'fifteen lakh rupees' (1,500,000), 'one crore rupees' (10,000,000), "
+        "'two and a half crore' (25,000,000). NEVER read digit by digit."
+    ),
+    "AED": (
+        "Currency is UAE Dirhams. Say 'dirhams' or 'AED'. 'twelve hundred dirhams', "
+        "'fifteen thousand dirhams', 'two million dirhams'."
+    ),
+    "CAD": ("Currency is Canadian Dollars. Say 'dollars' — qualify as Canadian "
+            "only if the caller asks. 'fifteen thousand dollars'."),
+    "AUD": ("Currency is Australian Dollars. Say 'dollars' — qualify as Australian "
+            "only if the caller asks. 'fifteen thousand dollars'."),
+    "SAR": ("Currency is Saudi Riyals. Say 'riyals'. 'fifteen thousand riyals', "
+            "'two million riyals'."),
+}
+
+
 def get_receptionist_prompt(business_name: str = "Rolling Shutters Inc.",
                             trade: str = "windows",
                             knowledge_base: str = "",
                             timezone: str = "America/Los_Angeles",
-                            persona_name: str = "Anna") -> str:
+                            persona_name: str = "Anna",
+                            currency: str = "USD") -> str:
     """Compose the runtime system prompt with current date + business config."""
     try:
         now = datetime.now(ZoneInfo(timezone))
@@ -16,12 +59,20 @@ def get_receptionist_prompt(business_name: str = "Rolling Shutters Inc.",
     today = now.strftime("%A, %B %d, %Y")
     current_time = now.strftime("%I:%M %p")
 
+    currency = (currency or "USD").upper()
+    speaking_guide = CURRENCY_SPEAKING_GUIDES.get(
+        currency,
+        f"Currency code is {currency}. Speak amounts naturally — never digit by digit.",
+    )
+
     base = RECEPTIONIST_PROMPT.format(
         persona_name=(persona_name or "Anna").strip() or "Anna",
         business_name=business_name,
         trade=trade,
         today=today,
         current_time=current_time,
+        currency=currency,
+        speaking_guide=speaking_guide,
     )
     if knowledge_base:
         base += "\n\nBUSINESS KNOWLEDGE BASE:\n" + knowledge_base.strip()[:3000]
@@ -42,6 +93,20 @@ WHAT YOU CAN DO (you have tools for these — USE THEM, do not invent answers):
 - Send an SMS confirmation to the caller (send_sms) — only if they asked for SMS.
 - Send an email confirmation to the caller (send_email) — only if they asked for email.
 - Hang up the call when the conversation is complete (end_call).
+
+SPEAKING NUMBERS AND PRICES (CRITICAL — Vapi speaks your text verbatim):
+- {speaking_guide}
+- ALWAYS spell numbers as a human would on the phone, NEVER digit-by-digit.
+  WRONG: "one comma five seven five comma zero zero zero rupees"
+  WRONG: "one zero zero zero zero zero rupees"
+  RIGHT (PKR): "fifteen lakh seventy-five thousand rupees" or "around sixteen lakh"
+  RIGHT (USD): "fifteen thousand seven hundred and fifty dollars" or "about sixteen thousand"
+- Round generously when speaking — "around fifteen lakh", "just under sixteen
+  lakh", "roughly twenty thousand dollars". Crisp ranges feel more human than
+  exact figures.
+- For phone numbers, read digits in 3-4 digit groups: "three zero zero, one two
+  three four, five six seven" — NOT one continuous string.
+- For dates, say "May fifth", "this Saturday at nine A M" — never "five slash zero five".
 
 CONVERSATION RULES:
 - Keep responses to 1–2 short sentences. This is a phone call. No bullet points,

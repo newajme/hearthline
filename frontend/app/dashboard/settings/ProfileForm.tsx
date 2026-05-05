@@ -15,11 +15,23 @@ const TIMEZONES = [
   "Europe/London", "Europe/Paris", "Europe/Madrid", "Asia/Dubai", "Asia/Karachi",
   "Asia/Singapore", "Australia/Sydney", "UTC",
 ];
+const CURRENCIES: { code: string; label: string }[] = [
+  { code: "USD", label: "US Dollar ($)" },
+  { code: "EUR", label: "Euro (€)" },
+  { code: "GBP", label: "British Pound (£)" },
+  { code: "PKR", label: "Pakistani Rupee (Rs)" },
+  { code: "INR", label: "Indian Rupee (₹)" },
+  { code: "AED", label: "UAE Dirham (د.إ)" },
+  { code: "CAD", label: "Canadian Dollar (C$)" },
+  { code: "AUD", label: "Australian Dollar (A$)" },
+  { code: "SAR", label: "Saudi Riyal (﷼)" },
+];
 
 type FormState = {
   name: string;
   trade: string;
   timezone: string;
+  currency: string;
   phone_number: string;
   voice_persona: string;
 };
@@ -29,6 +41,7 @@ function pickEditable(b: Business): FormState {
     name: b.name ?? "",
     trade: b.trade ?? "",
     timezone: b.timezone ?? "",
+    currency: b.currency ?? "USD",
     phone_number: b.phone_number ?? "",
     voice_persona: b.voice_persona ?? "",
   };
@@ -131,13 +144,25 @@ export default function ProfileForm({ business }: { business: Business }) {
           </select>
         </Field>
 
-        <Field label="Timezone" hint="Used for booking + business hours." full>
+        <Field label="Timezone" hint="Used for booking + business hours.">
           <select
             className="text-input"
             value={form.timezone}
             onChange={(e) => update("timezone", e.target.value)}
           >
             {TIMEZONES.map((tz) => <option key={tz} value={tz}>{tz}</option>)}
+          </select>
+        </Field>
+
+        <Field label="Currency" hint="Anna quotes prices in this currency. Dashboard formats accordingly." full>
+          <select
+            className="text-input"
+            value={form.currency}
+            onChange={(e) => update("currency", e.target.value)}
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c.code} value={c.code}>{c.label}</option>
+            ))}
           </select>
         </Field>
       </div>

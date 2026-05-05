@@ -199,9 +199,11 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
     kb = biz.knowledge_base if biz else ""
     tz = biz.timezone if biz else "America/Los_Angeles"
     persona = (getattr(biz, "voice_persona", "") or "Anna").strip() or "Anna"
+    currency = (getattr(biz, "currency", "") or "USD").upper()
 
     system_prompt = get_receptionist_prompt(
         business_name=biz_name, trade=trade, knowledge_base=kb, timezone=tz,
+        currency=currency,
         persona_name=persona,
     )
     if caller_phone:

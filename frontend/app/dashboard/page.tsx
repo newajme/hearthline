@@ -2,19 +2,21 @@ import Link from "next/link";
 
 import { getPersonaName } from "@/app/lib/persona";
 
-import { fetchJson, fmtAge, fmtMoney, type Call, type Lead, type Page, type Quote } from "./lib";
+import { fetchJson, fmtAge, fmtMoney, type Business, type Call, type Lead, type Page, type Quote } from "./lib";
 import { LeadActionPill, StatusPill } from "./parts";
 
 export default async function OverviewPage() {
-  const [leadsRes, callsRes, quotesRes, persona] = await Promise.all([
+  const [leadsRes, callsRes, quotesRes, persona, businessesRes] = await Promise.all([
     fetchJson<Page<Lead>>("/leads/"),
     fetchJson<Page<Call>>("/calls/"),
     fetchJson<Page<Quote>>("/quotes/"),
     getPersonaName(),
+    fetchJson<Page<Business>>("/businesses/"),
   ]);
   const leads = leadsRes?.results ?? [];
   const calls = callsRes?.results ?? [];
   const quotes = quotesRes?.results ?? [];
+  const currency = businessesRes?.results?.[0]?.currency ?? "USD";
 
   const totalQuoteValue = quotes.reduce((s, q) => s + parseFloat(q.total || "0"), 0);
   const bookedCount = leads.filter((l) => l.status === "booked" || l.status === "won").length;
@@ -36,7 +38,7 @@ export default async function OverviewPage() {
       <div className="app-content">
         <div className="mock-kpis" style={{ padding: 0 }}>
           <Kpi label="Total Leads" value={leads.length} delta={leads.length > 0 ? `${leads.length} captured` : "Awaiting first inbound"} />
-          <Kpi label="Quoted value" value={fmtMoney(totalQuoteValue)} delta={`${quotes.length} drafted by AI`} />
+          <Kpi label="Quoted value" value={fmtMoney(totalQuoteValue, currency)} delta={`${quotes.length} drafted by AI`} />
           <Kpi label="Bookings" value={bookedCount} delta={wonCount > 0 ? `${wonCount} won` : "—"} />
         </div>
 
@@ -77,7 +79,7 @@ export default async function OverviewPage() {
                   <div className="app-row-title app-row-title-soft">{lead.project_summary || "(no summary)"}</div>
                   <div className="app-row-sub">{fmtAge(lead.created_at)} · {lead.temperature}</div>
                 </div>
-                <div className="app-row-value">{fmtMoney(lead.estimated_value)}</div>
+                <div className="app-row-value">{fmtMoney(lead.estimated_value, currency)}</div>
                 <div className="app-row-action">
                   <LeadActionPill lead={lead} />
                 </div>
@@ -128,7 +130,7 @@ export default async function OverviewPage() {
                     <span className="dash-list-id">{q.reference}</span>
                     <div className="dash-list-body">
                       <div className="dash-list-title" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                        {fmtMoney(q.total)}
+                        {fmtMoney(q.total, currency)}
                         <StatusPill status={q.status} />
                         {q.drafted_by_ai && <span className="tag brand">AI</span>}
                       </div>

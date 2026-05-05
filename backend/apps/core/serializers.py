@@ -57,7 +57,7 @@ class BusinessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Business
         fields = [
-            "id", "name", "slug", "trade", "timezone",
+            "id", "name", "slug", "trade", "timezone", "currency",
             "phone_number", "voice_persona", "knowledge_base",
             "llm_provider",
             "anthropic_api_key", "openai_api_key", "vapi_api_key",
