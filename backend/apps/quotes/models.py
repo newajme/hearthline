@@ -21,10 +21,11 @@ class Quote(models.Model):
     pdf_url = models.URLField(blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default="draft")
     drafted_by_ai = models.BooleanField(default=True)
-    photo_assessment = models.JSONField(
-        default=dict, blank=True,
-        help_text="Vision-AI analysis of customer-uploaded photos that informed this quote",
-    )
+    # JSON metadata bucket — currently stores `drafted_during_call` (Vapi
+    # call_id) so we can dedupe a draft_quote tool call across retries. Kept
+    # generic so it can hold scope notes, source links, etc. Field name stays
+    # as `photo_assessment` for API/data compatibility — don't rename.
+    photo_assessment = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     sent_at = models.DateTimeField(null=True, blank=True)
     accepted_at = models.DateTimeField(null=True, blank=True)

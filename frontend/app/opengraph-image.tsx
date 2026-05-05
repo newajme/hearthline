@@ -80,7 +80,7 @@ export default async function OpengraphImage() {
               fontFamily: "sans-serif",
             }}
           >
-            Anna answers, qualifies, photo-quotes, and books — so your crew sleeps and your calendar fills itself.
+            Anna answers, qualifies, and books — so your crew sleeps and your calendar fills itself.
           </div>
           <div
             style={{

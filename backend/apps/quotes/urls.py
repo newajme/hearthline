@@ -5,5 +5,4 @@ from . import views
 urlpatterns = [
     path("", views.QuoteList.as_view(), name="quote-list"),
     path("<int:pk>/", views.QuoteDetail.as_view(), name="quote-detail"),
-    path("from-photo/", views.PhotoQuote.as_view(), name="quote-from-photo"),
 ]

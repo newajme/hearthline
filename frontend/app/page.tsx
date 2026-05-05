@@ -20,13 +20,13 @@ const REPO_URL = "https://github.com/codewithmuh/hearthline";
 export const metadata: Metadata = {
   title: "Hearthline — The 24/7 AI front desk for home-service teams",
   description:
-    "Anna answers, qualifies, photo-quotes, and books — so your crew sleeps and your calendar fills itself. Open-source AI receptionist for HVAC, plumbing, roofing, solar, and more.",
+    "Anna answers, qualifies, and books — so your crew sleeps and your calendar fills itself. Open-source AI receptionist for HVAC, plumbing, roofing, solar, and more.",
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     title: "Hearthline — The 24/7 AI front desk for home-service teams",
     description:
-      "Anna answers, qualifies, photo-quotes, and books — so your crew sleeps and your calendar fills itself.",
+      "Anna answers, qualifies, and books — so your crew sleeps and your calendar fills itself.",
     url: SITE_URL,
   },
 };
@@ -39,7 +39,7 @@ const SOFTWARE_JSONLD = {
   applicationSubCategory: "AI Receptionist",
   operatingSystem: "Web, Linux, Docker",
   description:
-    "Open-source 24/7 AI front desk for home-service teams — phone, SMS, WhatsApp, email, chat. Anna qualifies leads, drafts photo-based quotes, and books appointments automatically.",
+    "Open-source 24/7 AI front desk for home-service teams — phone, SMS, WhatsApp, email, chat. Anna qualifies leads and books appointments automatically.",
   url: SITE_URL,
   license: "https://www.gnu.org/licenses/agpl-3.0.html",
   isAccessibleForFree: true,
@@ -62,7 +62,6 @@ const SOFTWARE_JSONLD = {
   featureList: [
     "AI phone receptionist (Vapi + Twilio)",
     "AI chat assistant (web, SMS, WhatsApp)",
-    "Photo-to-quote vision pipeline",
     "Unified support inbox (WhatsApp / SMS / email / web chat tickets)",
     "CRM integration (HubSpot, Pipedrive, Salesforce, ServiceTitan)",
     "Configurable per-trade pricing rules",

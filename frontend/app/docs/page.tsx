@@ -91,12 +91,6 @@ const PIPELINE = [
     href: `${REPO_TREE}/backend/apps/calls/services/persistence.py`,
   },
   {
-    stage: "Photo → quote",
-    code: "POST /api/quotes/from-photo/",
-    body: "GPT-4o vision drafts line items, subtotal, tax, total, and customer-facing notes from a single inbound MMS or chat upload.",
-    href: `${REPO_TREE}/backend/apps/ai/services.py`,
-  },
-  {
     stage: "Dashboard updates live",
     code: "GET /api/leads/ · GET /api/calls/",
     body: "Server component re-fetches, action pill flips to Qualified / Quote Sent / Booked / Won.",

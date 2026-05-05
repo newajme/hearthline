@@ -129,10 +129,7 @@ function SceneSms({ active, t }: { active: boolean; t: (k: string) => string }) 
           <div className="scene-sms-bubble">{t("convo.msg2")}</div>
         </div>
         <div className="scene-sms-msg in">
-          <div className="scene-sms-bubble">
-            {t("convo.msg3")}
-            <span className="scene-sms-photo">📎 living-room-window.jpg</span>
-          </div>
+          <div className="scene-sms-bubble">{t("convo.msg3")}</div>
         </div>
         <div className="scene-sms-msg out">
           <div className="scene-sms-bubble">

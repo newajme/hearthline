@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s · Hearthline",
   },
   description:
-    "Phone, SMS, WhatsApp, email, chat — every customer touchpoint qualified, photo-quoted, and dispatched without anyone picking up the phone.",
+    "Phone, SMS, WhatsApp, email, chat — every customer touchpoint qualified, quoted, and dispatched without anyone picking up the phone.",
   applicationName: "Hearthline",
   generator: "Next.js",
   authors: [{ name: "Muhammad Rashid", url: "https://codewithmuh.com" }],
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: "Hearthline",
     title: "Hearthline — The 24/7 AI front desk for home-service teams",
     description:
-      "Phone, SMS, WhatsApp, email, chat — every customer touchpoint qualified, photo-quoted, and dispatched without anyone picking up the phone.",
+      "Phone, SMS, WhatsApp, email, chat — every customer touchpoint qualified, quoted, and dispatched without anyone picking up the phone.",
     url: SITE_URL,
     locale: "en_US",
   },
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Hearthline — The 24/7 AI front desk for home-service teams",
     description:
-      "Anna answers, qualifies, photo-quotes, and books — so your crew sleeps and your calendar fills itself.",
+      "Anna answers, qualifies, and books — so your crew sleeps and your calendar fills itself.",
     site: "@codewithmuh",
     creator: "@codewithmuh",
   },

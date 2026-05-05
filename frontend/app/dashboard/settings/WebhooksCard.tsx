@@ -27,13 +27,6 @@ export default function WebhooksCard() {
           </div>
           <code className="vapi-url">/api/calls/webhooks/twilio/</code>
         </li>
-        <li>
-          <div>
-            <div className="integrations-name">Photo → quote</div>
-            <div className="integrations-sub">POST a photo URL + lead ID, get a drafted quote.</div>
-          </div>
-          <code className="vapi-url">/api/quotes/from-photo/</code>
-        </li>
       </ul>
     </article>
   );

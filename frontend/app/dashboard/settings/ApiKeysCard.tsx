@@ -22,7 +22,7 @@ export default function ApiKeysCard({ business }: { business: Business }) {
     {
       field: "anthropic_api_key",
       label: "Anthropic API key",
-      hint: "Required — Claude powers Anna, lead extraction, and photo-to-quote vision.",
+      hint: "Required — Claude powers Anna and lead extraction.",
       configured: business.has_anthropic_key,
       masked: business.anthropic_api_key,
       hidden: usingOpenAI,
@@ -30,7 +30,7 @@ export default function ApiKeysCard({ business }: { business: Business }) {
     {
       field: "openai_api_key",
       label: "OpenAI API key",
-      hint: "Required — GPT powers Anna, lead extraction, and photo-to-quote vision.",
+      hint: "Required — GPT powers Anna and lead extraction.",
       configured: business.has_openai_key,
       masked: business.openai_api_key,
       hidden: !usingOpenAI,
@@ -144,7 +144,7 @@ export default function ApiKeysCard({ business }: { business: Business }) {
           </button>
         </div>
         <p className="provider-toggle-hint">
-          Powers Anna, lead extraction, and photo-to-quote vision. Switch any time — the unused provider&apos;s key isn&apos;t needed.
+          Powers Anna and lead extraction. Switch any time — the unused provider&apos;s key isn&apos;t needed.
         </p>
       </div>
 

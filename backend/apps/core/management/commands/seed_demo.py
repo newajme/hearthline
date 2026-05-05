@@ -196,7 +196,6 @@ class Command(BaseCommand):
                 photo_assessment={
                     "trade": lead.extracted_fields.get("trade"),
                     "scope_summary": lead.project_summary,
-                    "source_photo": "https://example.com/demo-photo.jpg",
                 },
             )
             for desc, qty, unit in q["items"]:

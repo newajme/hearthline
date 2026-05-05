@@ -122,7 +122,7 @@ export default async function OverviewPage() {
               <Link href="/dashboard/quotes" className="dash-card-meta">View all →</Link>
             </div>
             {quotes.length === 0 ? (
-              <p className="kv-value-muted" style={{ fontSize: 13.5, margin: 0 }}>No quotes yet — draft one or POST a photo.</p>
+              <p className="kv-value-muted" style={{ fontSize: 13.5, margin: 0 }}>No quotes yet — draft one from a lead.</p>
             ) : (
               <ul className="dash-list">
                 {quotes.slice(0, 4).map((q) => (

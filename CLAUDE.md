@@ -17,7 +17,7 @@ The product:
 - A persona named **Anna** answers every inbound call via Vapi, qualifies the
   lead, books a slot, and sends an SMS confirmation.
 - Captures multi-channel touches (phone, SMS, WhatsApp, email, web chat).
-- Drafts photo-based quotes using OpenAI vision.
+- Drafts quotes live on the call from the configured knowledge base / price list.
 - Writes structured leads into a Django dashboard the business owner uses.
 
 Live demo target: **hearthline.codewithmuh.com**.
@@ -107,7 +107,7 @@ hearthline/
         │       ├── scheduling.py     # slot availability stub
         │       └── persistence.py    # qualify_lead_tool, book_appointment_tool
         ├── quotes/              # Quote, LineItem (editable, printable PDF)
-        └── ai/                  # services.py — vision photo→quote, transcript→lead
+        └── ai/                  # services.py — transcript → structured lead extraction
 ```
 
 ## Key URLs / endpoints
@@ -123,7 +123,6 @@ hearthline/
 - `GET  /api/health/`
 - `GET  /api/businesses/`, `/api/leads/`, `/api/calls/`, `/api/quotes/`
 - `GET/PATCH /api/leads/<id>/`, `/api/quotes/<id>/`
-- `POST /api/quotes/from-photo/`               (vision → quote)
 - `POST /api/calls/webhooks/vapi/`             (Vapi end-of-call report)
 - `POST /api/calls/webhooks/twilio/`           (Twilio voice/SMS)
 - `POST /api/calls/vapi/chat/completions/`     (Vapi custom-LLM, OpenAI-compatible)

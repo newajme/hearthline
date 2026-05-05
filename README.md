@@ -36,7 +36,7 @@ platform. Hearthline flips all three:
 Hearthline is the AI communication hub for HVAC, plumbing, windows, roofing,
 solar, energy-renovation, electrical, garage, and pest-control businesses.
 Every inbound call, SMS, WhatsApp, email, and chat lands on one timeline —
-qualified, photo-quoted, and routed to the right tech without anyone picking
+qualified, quoted, and routed to the right tech without anyone picking
 up the phone.
 
 - **🎙️ Branded voice receptionist** — Configure name, persona, voice, and
@@ -50,14 +50,12 @@ up the phone.
   conversations open tickets in `/dashboard/support` with a threaded reply
   view, status workflow (open → pending → resolved), and an agent reply box
   that posts back through the original channel.
-- **📸 Photo-first quoting** — Customer texts a photo → vision pipeline drafts
-  a real PDF estimate in <60s with line items, tax, and total.
 - **🌍 10 languages out of the box** — English, Spanish, German, French,
   Italian, Portuguese, Dutch, Chinese, Japanese, Arabic (RTL).
 - **📱 Mobile apps** *(coming soon)* — Native iPhone (SwiftUI) and Android
   (Kotlin/Compose) companion apps point at the same Django backend. Push
-  alerts when Anna books a job, lead detail + conversation timeline, photo
-  quotes openable and editable in-app. Self-hosters set their own API URL.
+  alerts when Anna books a job, lead detail + conversation timeline, quotes
+  openable and editable in-app. Self-hosters set their own API URL.
 - **🚐 Tech dispatch** *(roadmap)* — Booked job auto-routes to the closest
   tech with GPS + ETA SMS.
 - **💳 Payments + reviews** *(roadmap)* — Stripe deposit on quote acceptance,
@@ -210,7 +208,7 @@ hearthline/
         │   └── tests/          # happy-path + auth-matrix tests
         ├── quotes/             # Quote, LineItem (editable + printable PDF)
         ├── support/            # Tickets, threaded messages, WhatsApp/SMS/email webhooks + reply
-        └── ai/                 # Photo → quote vision pipeline
+        └── ai/                 # Transcript → structured lead extraction
 ```
 
 ## Configuration
@@ -224,7 +222,7 @@ secrets are documented inline with generate commands.
 | `HEARTHLINE_ENCRYPTION_KEY` | Fernet key encrypting per-business API keys | Always in prod |
 | `VAPI_WEBHOOK_SECRET` | Shared secret for Vapi webhook + custom-LLM auth | Anytime Vapi is wired |
 | `ANTHROPIC_API_KEY` | Claude tool-use loop (env fallback) | Receptionist talking |
-| `OPENAI_API_KEY` | Vision quoting + optional LLM provider (env fallback) | Photo→quote |
+| `OPENAI_API_KEY` | Optional LLM provider (env fallback) | When llm_provider=openai |
 | `VAPI_API_KEY` + `VAPI_PHONE_NUMBER_ID` | Inbound voice | Real phone calls |
 | `TWILIO_*` | SMS confirmations | Outbound SMS |
 | `POSTGRES_*` / `DATABASE_URL` | Database | Always |
@@ -237,7 +235,6 @@ fallbacks — so each business runs on their own AI usage account.
 **Shipped**
 - ✅ Per-business AI/voice keys with Fernet encryption
 - ✅ Receptionist agent loop (Anthropic + OpenAI providers, 7 tools)
-- ✅ OpenAI Vision pipeline → drafted quote with line items, tax, total
 - ✅ Next.js dashboard: Overview, Leads, Calls, Quotes (editable + PDF), Customers, Settings, Test simulator
 - ✅ 10 dashboard languages incl. RTL Arabic
 - ✅ Lead-detail conversation timeline + extracted_fields inspector

@@ -41,7 +41,7 @@ export default function PrivacyPage() {
               </li>
               <li>
                 <strong>Customer interactions.</strong> Call audio, transcripts, SMS / chat
-                messages, photos uploaded for quoting, and any structured data Anna extracts
+                messages, and any structured data Anna extracts
                 (name, phone, address, project description, estimated value).
               </li>
               <li>
@@ -70,7 +70,6 @@ export default function PrivacyPage() {
             <p>To deliver Hearthline, we share specific data with the following providers:</p>
             <ul>
               <li><strong>Anthropic</strong> (Claude) — transcript &rarr; structured lead extraction.</li>
-              <li><strong>OpenAI</strong> — vision pipeline for photo-based quoting.</li>
               <li><strong>Vapi</strong> + <strong>Twilio</strong> — voice and SMS handling.</li>
               <li><strong>Stripe</strong> — payment processing for deposits and invoices.</li>
               <li><strong>AWS</strong> — hosting and storage (eu-west-3 / us-east-1, your choice).</li>

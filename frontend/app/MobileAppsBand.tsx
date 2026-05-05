@@ -13,7 +13,7 @@ const FEATURES: Array<{ icon: string; title: string; body: string }> = [
   },
   {
     icon: "📄",
-    title: "View & edit photo quotes",
+    title: "View & edit AI-drafted quotes",
     body: "Open Anna-drafted PDFs in-app, change status, edit notes, share with the customer.",
   },
   {

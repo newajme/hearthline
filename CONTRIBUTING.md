@@ -44,7 +44,6 @@ docker compose exec backend python manage.py seed_demo --wipe
 **Big (talk to us first):**
 - Multi-tenant auth + per-business data isolation
 - Eval harness for the Anna prompt
-- Photo-quote vision pipeline accuracy improvements
 
 ## PR checklist
 
