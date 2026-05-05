@@ -8,6 +8,7 @@ const EMPTY_BUSINESS: Business = {
   slug: "",
   trade: "general",
   timezone: "UTC",
+  currency: "USD",
   phone_number: "",
   voice_persona: "Anna",
   knowledge_base: "",
