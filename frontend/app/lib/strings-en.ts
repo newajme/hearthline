@@ -285,6 +285,24 @@ export const en: Dict = {
   "stats.cardB.label": "average time from caller hello to a drafted estimate in your dashboard.",
   "stats.cardC.label": "average time-to-first-response across phone, SMS, and chat.",
 
+  // Mobile apps band
+  "apps.eyebrow": "Now on iPhone & Android",
+  "apps.title": "Anna in your pocket.",
+  "apps.body": "The Hearthline mobile apps put every lead, call and quote on your home screen. Tap a push, open the conversation, dispatch the crew. Built native — SwiftUI on iOS, Jetpack Compose on Android — against the same self-hostable backend.",
+  "apps.f1.title": "Leads in your pocket",
+  "apps.f1.body": "Anna's qualified leads sync to your phone the second they land — name, project, temperature, value.",
+  "apps.f2.title": "Push the moment a job books",
+  "apps.f2.body": "Tap a notification to jump straight into the customer's conversation. No noise, just signal.",
+  "apps.f3.title": "View & edit AI-drafted quotes",
+  "apps.f3.body": "Open Anna-drafted PDFs in-app, change status, edit notes, share with the customer.",
+  "apps.f4.title": "Call transcripts on the go",
+  "apps.f4.body": "Skim what Anna and the caller said, grouped by day. Catch up on yesterday's calls in two minutes.",
+  "apps.appleTop": "Coming soon to the",
+  "apps.appleBottom": "App Store",
+  "apps.googleTop": "COMING SOON ON",
+  "apps.googleBottom": "Google Play",
+  "apps.note": "Self-hosting? Both apps point to your own backend via a single \"API URL\" setting in the app. One binary on the stores, your data on your server.",
+
   // ChatWidget
   "chat.intro": "Hi! I'm Anna from Hearthline. Need a quote, want to book a job, or have a question on a recent visit?",
   "chat.handoffIntro": "Connecting you to a human teammate — they'll see this conversation and reply here.",
@@ -452,7 +470,7 @@ export const en: Dict = {
   "login.error.network": "Network error. Try again.",
 
   // MissedCallStory scene captions
-  "story.scene.incoming": "Incoming · unknown number",
+  "story.scene.incoming": "Calling · 11:47 PM",
   "story.scene.onLine": "on the line",
   "story.scene.transcript": "\"Hi, this is Anna with North Pine Windows. I can help you tonight — what's going on at home?\"",
   "story.scene.calHead": "This week",

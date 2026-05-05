@@ -1,41 +1,25 @@
 import Image from "next/image";
 
-const FEATURES: Array<{ icon: string; title: string; body: string }> = [
-  {
-    icon: "📥",
-    title: "Leads in your pocket",
-    body: "Anna's qualified leads sync to your phone the second they land — name, project, temperature, value.",
-  },
-  {
-    icon: "🔔",
-    title: "Push the moment a job books",
-    body: "Tap a notification to jump straight into the customer's conversation. No noise, just signal.",
-  },
-  {
-    icon: "📄",
-    title: "View & edit AI-drafted quotes",
-    body: "Open Anna-drafted PDFs in-app, change status, edit notes, share with the customer.",
-  },
-  {
-    icon: "📞",
-    title: "Call transcripts on the go",
-    body: "Skim what Anna and the caller said, grouped by day. Catch up on yesterday's calls in two minutes.",
-  },
-];
+import { getT } from "./lib/i18n-server";
 
-export default function MobileAppsBand() {
+export default async function MobileAppsBand() {
+  const { t } = await getT();
+  const FEATURES: Array<{ icon: string; title: string; body: string }> = [
+    { icon: "📥", title: t("apps.f1.title"), body: t("apps.f1.body") },
+    { icon: "🔔", title: t("apps.f2.title"), body: t("apps.f2.body") },
+    { icon: "📄", title: t("apps.f3.title"), body: t("apps.f3.body") },
+    { icon: "📞", title: t("apps.f4.title"), body: t("apps.f4.body") },
+  ];
   return (
     <section className="shell section-tight" id="apps" aria-labelledby="apps-title">
       <div className="apps-band">
         <div className="apps-band-text">
-          <p className="section-eyebrow">Now on iPhone &amp; Android</p>
+          <p className="section-eyebrow">{t("apps.eyebrow")}</p>
           <h2 id="apps-title" className="apps-band-title">
-            Anna in your pocket.
+            {t("apps.title")}
           </h2>
           <p className="apps-band-body">
-            The Hearthline mobile apps put every lead, call and quote on your home screen. Tap a push,
-            open the conversation, dispatch the crew. Built native — SwiftUI on iOS, Jetpack Compose on
-            Android — against the same self-hostable backend.
+            {t("apps.body")}
           </p>
 
           <ul className="apps-feature-list">
@@ -51,12 +35,11 @@ export default function MobileAppsBand() {
           </ul>
 
           <div className="apps-store-row">
-            <StoreBadge kind="apple" top="Coming soon to the" bottom="App Store" />
-            <StoreBadge kind="google" top="COMING SOON ON" bottom="Google Play" />
+            <StoreBadge kind="apple" top={t("apps.appleTop")} bottom={t("apps.appleBottom")} />
+            <StoreBadge kind="google" top={t("apps.googleTop")} bottom={t("apps.googleBottom")} />
           </div>
           <p className="apps-band-note">
-            Self-hosting? Both apps point to your own backend via a single &quot;API URL&quot; setting in
-            the app. One binary on the stores, your data on your server.
+            {t("apps.note")}
           </p>
         </div>
 
