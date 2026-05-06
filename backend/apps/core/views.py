@@ -30,6 +30,44 @@ class BusinessDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 
+# Whitelist of fields the reveal endpoint will return in plaintext. Avoid
+# adding non-secret CharFields here — they're already returned by the regular
+# serializer.
+REVEALABLE_FIELDS = {
+    "anthropic_api_key", "openai_api_key", "vapi_api_key", "vapi_phone_number_id",
+    "twilio_account_sid", "twilio_auth_token", "whatsapp_access_token",
+    "whatsapp_verify_token",
+}
+
+
+class RevealKeyView(APIView):
+    """Return the decrypted plaintext of a single saved credential.
+
+    Only authenticated staff users. Logs every reveal so the action is
+    auditable. The regular Business serializer NEVER ships plaintext to the
+    browser — this endpoint is the only path, and it's POST-only so it can't
+    be triggered by a stray <img> or link.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk: int):
+        if not (request.user and request.user.is_staff):
+            return Response({"detail": "Staff only."}, status=status.HTTP_403_FORBIDDEN)
+        field = (request.data.get("field") or "").strip()
+        if field not in REVEALABLE_FIELDS:
+            return Response({"detail": "Unknown or non-revealable field."}, status=status.HTTP_400_BAD_REQUEST)
+        business = Business.objects.filter(pk=pk).first()
+        if business is None:
+            return Response({"detail": "Business not found."}, status=status.HTTP_404_NOT_FOUND)
+        plaintext = (getattr(business, field, "") or "").strip()
+        import logging
+        logging.getLogger(__name__).info(
+            "[REVEAL] user=%s biz=%s field=%s len=%d",
+            request.user.username, business.pk, field, len(plaintext),
+        )
+        return Response({"value": plaintext})
+
+
 class ChannelListCreate(generics.ListCreateAPIView):
     """List/create channels — accepts ?business=<id> filter."""
     serializer_class = ChannelSerializer

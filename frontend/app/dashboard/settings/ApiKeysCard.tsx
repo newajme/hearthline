@@ -157,6 +157,7 @@ export default function ApiKeysCard({ business }: { business: Business }) {
           <KeyRowItem
             key={String(row.field)}
             row={row}
+            businessId={business.id}
             value={drafts[String(row.field)] ?? ""}
             onChange={(v) => setDraft(String(row.field), v)}
             onClear={() => clearKey(String(row.field))}
@@ -177,11 +178,61 @@ export default function ApiKeysCard({ business }: { business: Business }) {
 }
 
 function KeyRowItem({
-  row, value, onChange, onClear, disabled,
+  row, businessId, value, onChange, onClear, disabled,
 }: {
-  row: KeyRow; value: string; onChange: (v: string) => void; onClear: () => void; disabled: boolean;
+  row: KeyRow; businessId: number; value: string; onChange: (v: string) => void; onClear: () => void; disabled: boolean;
 }) {
   const [show, setShow] = useState(false);
+  const [revealed, setRevealed] = useState<string | null>(null);
+  const [revealing, setRevealing] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function reveal() {
+    if (revealed !== null) {
+      setRevealed(null);
+      return;
+    }
+    setRevealing(true);
+    try {
+      const res = await fetch(`/api/proxy/businesses/${businessId}/reveal-key`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ field: String(row.field) }),
+      });
+      if (!res.ok) {
+        alert(res.status === 403 ? "Staff only — sign in as a staff user to reveal saved keys." : "Failed to reveal key.");
+        return;
+      }
+      const data = await res.json();
+      setRevealed(data.value || "");
+    } finally {
+      setRevealing(false);
+    }
+  }
+
+  async function copyCurrent() {
+    const text = revealed ?? row.masked ?? "";
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      alert("Clipboard blocked by the browser. Long-press to copy manually.");
+    }
+  }
+
+  async function copyDraft() {
+    if (!value) return;
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      alert("Clipboard blocked by the browser.");
+    }
+  }
+
   return (
     <div className="key-row">
       <div className="key-row-meta">
@@ -192,7 +243,29 @@ function KeyRowItem({
         </div>
         {row.hint && <div className="key-row-hint">{row.hint}</div>}
         {row.configured && row.masked && (
-          <div className="key-row-current">Current: <code>{row.masked}</code></div>
+          <div className="key-row-current">
+            Current: <code>{revealed ?? row.masked}</code>
+            <span className="key-row-current-actions">
+              <button
+                type="button"
+                className="key-row-current-btn"
+                onClick={reveal}
+                disabled={disabled || revealing}
+                title={revealed ? "Hide saved key" : "Show saved key (staff only)"}
+              >
+                {revealing ? "…" : revealed ? "Hide" : "Show"}
+              </button>
+              <button
+                type="button"
+                className={`key-row-current-btn ${copied ? "is-copied" : ""}`}
+                onClick={copyCurrent}
+                disabled={disabled}
+                title="Copy to clipboard"
+              >
+                {copied ? "Copied" : "Copy"}
+              </button>
+            </span>
+          </div>
         )}
       </div>
       <div className="key-row-input">
@@ -213,6 +286,16 @@ function KeyRowItem({
           aria-label={show ? "Hide" : "Show"}
         >
           {show ? "Hide" : "Show"}
+        </button>
+        <button
+          type="button"
+          className="key-row-toggle"
+          onClick={copyDraft}
+          disabled={disabled || !value}
+          aria-label="Copy what you typed"
+          title="Copy what you typed"
+        >
+          Copy
         </button>
         {row.configured && (
           <button
