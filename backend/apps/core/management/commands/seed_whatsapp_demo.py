@@ -87,7 +87,7 @@ class Command(BaseCommand):
             return existing
 
         customer, _ = Customer.objects.get_or_create(
-            phone=DEMO_PHONE,
+            business=business, phone=DEMO_PHONE,
             defaults={"name": DEMO_NAME, "email": DEMO_EMAIL, "address": DEMO_ADDRESS},
         )
         if not customer.name:
