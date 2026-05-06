@@ -29,14 +29,32 @@ INSTALLED_APPS = [
     "django_ratelimit",
 ]
 
-# Local-memory cache for django-ratelimit. Per-process; for multi-worker
-# production, swap to Redis/Memcached and remove the silenced check below.
-CACHES = {
-    "default": {
+# Cache backend choice matters: gunicorn runs 3 workers, and the receptionist
+# uses cache for per-call tool dedupe (sms_sent, tool_done, end_deferred). A
+# locmem cache is per-process so 2 of 3 workers miss every lookup, and Anna
+# re-fires tools across worker boundaries. FileBasedCache is shared by all
+# workers on the same host without needing Redis. Move to Redis when scaling
+# horizontally.
+import os as _os  # noqa: E402
+
+_CACHE_DIR = _os.environ.get("DJANGO_CACHE_DIR", "/var/data/django-cache")
+try:
+    _os.makedirs(_CACHE_DIR, exist_ok=True)
+    _CACHES_BACKEND = {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": _CACHE_DIR,
+        "TIMEOUT": 3600,
+        "OPTIONS": {"MAX_ENTRIES": 5000},
+    }
+except OSError:
+    # Fall back to locmem when the host doesn't have a writable shared dir
+    # (local dev without the docker volume).
+    _CACHES_BACKEND = {
         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "LOCATION": "hearthline-default",
-    },
-}
+    }
+
+CACHES = {"default": _CACHES_BACKEND}
 SILENCED_SYSTEM_CHECKS = ["django_ratelimit.E003", "django_ratelimit.W001"]
 
 MIDDLEWARE = [

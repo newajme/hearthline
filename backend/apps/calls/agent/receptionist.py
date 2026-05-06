@@ -311,10 +311,12 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
     already_run = _tools_already_run(call_id)
     if already_run:
         system_prompt += (
-            "\n\nTOOLS ALREADY CALLED THIS CALL:\n- "
-            + "\n- ".join(already_run)
-            + "\nDo NOT call any of these tools again. Their results are already "
-            "saved. Speak to the caller directly instead."
+            "\n\nTOOLS ALREADY DONE THIS CALL: " + ", ".join(already_run) + ".\n"
+            "These specific tools above have already saved data this call — "
+            "don't re-fire them. ALL OTHER TOOLS are still available and you "
+            "MUST call them when needed (e.g. if the customer agreed to a "
+            "quote and draft_quote is NOT in the list above, call draft_quote "
+            "now — don't just say you will)."
         )
 
     provider = (getattr(biz, "llm_provider", "") or "anthropic").lower()
