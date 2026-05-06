@@ -6,6 +6,7 @@ import logging
 from typing import Any
 
 from django.conf import settings
+from django.core.cache import cache
 
 from apps.calls.services.email import send_email
 from apps.calls.services.persistence import book_appointment_tool, draft_quote_tool, qualify_lead_tool
@@ -20,6 +21,42 @@ from .tools import TOOLS
 logger = logging.getLogger(__name__)
 
 CLAUDE_MODEL = "claude-sonnet-4-6"
+
+# Per-call state TTLs — longer than any realistic call.
+_CALL_STATE_TTL = 60 * 60  # 1 hour
+
+
+def _sms_already_sent(call_id: str | None, to: str) -> dict | None:
+    """Returns the cached send result if we've already sent an SMS on this call.
+
+    Vapi re-runs the agent loop every turn but doesn't replay tool history, so
+    Claude has no memory that send_sms already fired and will re-call it with
+    a freshly-paraphrased body. We cap outbound SMS at one per (call_id, to)
+    so the customer doesn't get the same confirmation 3 times.
+    """
+    if not call_id or not to:
+        return None
+    return cache.get(f"sms_sent:{call_id}:{to}")
+
+
+def _mark_sms_sent(call_id: str | None, to: str, result: dict) -> None:
+    if not call_id or not to:
+        return
+    cache.set(f"sms_sent:{call_id}:{to}", result, timeout=_CALL_STATE_TTL)
+
+
+def _end_call_already_deferred(call_id: str | None) -> bool:
+    """Was end_call already deferred once for this call? If so, the *next*
+    end_call should fire for real instead of looping forever."""
+    if not call_id:
+        return False
+    return bool(cache.get(f"end_deferred:{call_id}"))
+
+
+def _mark_end_call_deferred(call_id: str | None) -> None:
+    if not call_id:
+        return
+    cache.set(f"end_deferred:{call_id}", True, timeout=_CALL_STATE_TTL)
 
 
 def _client(business=None):
@@ -117,7 +154,14 @@ def execute_tool(name: str, tool_input: dict, *, caller_phone: str | None = None
         return check_availability(tool_input["date"], tool_input.get("trade"))
     if name == "send_sms":
         to = (tool_input.get("to") or "").strip() or (caller_phone or "")
-        return send_sms(to, tool_input["message"], business=business)
+        cached = _sms_already_sent(call_id, to)
+        if cached is not None:
+            logger.info("[SMS DEDUP] suppressing repeat send_sms call_id=%s to=%s", call_id, to)
+            return {**cached, "deduped": True}
+        result = send_sms(to, tool_input["message"], business=business)
+        if result.get("ok"):
+            _mark_sms_sent(call_id, to, result)
+        return result
     if name == "send_email":
         to = (tool_input.get("to") or "").strip()
         return send_email(to, tool_input.get("subject", ""), tool_input.get("body", ""), business=business)
@@ -237,10 +281,17 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
             conversation_history=conversation_history,
             execute_tool=dispatch,
         )
-        # Same defer-hangup safety net as the Claude branch.
-        if result.get("end_call") and len(result.get("text") or "") > 12:
-            logger.info("[END_CALL DEFERRED] hangup deferred so Vapi can play closing message")
-            result["end_call"] = False
+        # Defer hangup once so Vapi can play the closing line — but only the
+        # FIRST time. If we've already deferred this call, fire end_call for
+        # real even if Claude tries to add more text.
+        if result.get("end_call"):
+            if _end_call_already_deferred(call_id):
+                logger.info("[END_CALL] firing — already deferred once, hanging up now")
+                result["end_call"] = True
+            elif len(result.get("text") or "") > 12:
+                logger.info("[END_CALL DEFERRED] hangup deferred so Vapi can play closing message")
+                _mark_end_call_deferred(call_id)
+                result["end_call"] = False
         logger.info("[CALL %s · %s] ANNA: %s%s",
                     call_id or "?", caller_phone or "?",
                     (result.get("text") or "")[:300],
@@ -328,10 +379,16 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
 
     # Safety net: if Anna fired end_call WITH a non-trivial closing message in
     # the same turn, defer the hangup so Vapi finishes playing the audio first.
-    # Next turn, the model will fire end_call alone with empty text → real hangup.
-    if should_end and len(response_text) > 12:
-        logger.info("[END_CALL DEFERRED] hangup deferred so Vapi can play closing message")
-        should_end = False
+    # Next turn, the model fires end_call alone with empty text → real hangup.
+    # BUT defer only once per call — if we've already deferred this call_id,
+    # honor the second end_call regardless of text length so we don't loop.
+    if should_end:
+        if _end_call_already_deferred(call_id):
+            logger.info("[END_CALL] firing — already deferred once, hanging up now")
+        elif len(response_text) > 12:
+            logger.info("[END_CALL DEFERRED] hangup deferred so Vapi can play closing message")
+            _mark_end_call_deferred(call_id)
+            should_end = False
 
     logger.info("[CALL %s · %s] ANNA: %s%s",
                 call_id or "?", caller_phone or "?",
