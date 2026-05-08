@@ -335,10 +335,6 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
                 api_key=groq_key,
                 base_url="https://api.groq.com/openai/v1",
             )
-            # Patch the model name for the Groq loop
-            import apps.calls.agent.openai_loop as _ol
-            _orig_model = _ol.OPENAI_MODEL
-            _ol.OPENAI_MODEL = "llama-3.3-70b-versatile"
         except ImportError:
             return {
                 "text": f"{persona} here. I'd love to help, but my AI brain isn't connected right now. Please call back in a moment.",
@@ -348,16 +344,14 @@ def handle_conversation_turn(conversation_history: list, caller_phone: str | Non
         def _groq_dispatch(name: str, tool_input: dict) -> dict:
             return execute_tool(name, tool_input, caller_phone=caller_phone, call_id=call_id, business=biz)
 
-        try:
-            result = run_openai_loop(
-                groq_client,
-                system_prompt=system_prompt,
-                tools=TOOLS,
-                conversation_history=conversation_history,
-                execute_tool=_groq_dispatch,
-            )
-        finally:
-            _ol.OPENAI_MODEL = _orig_model
+        result = run_openai_loop(
+            groq_client,
+            system_prompt=system_prompt,
+            tools=TOOLS,
+            conversation_history=conversation_history,
+            execute_tool=_groq_dispatch,
+            model="llama-3.3-70b-versatile",
+        )
 
         if result.get("end_call"):
             if _end_call_already_deferred(call_id):

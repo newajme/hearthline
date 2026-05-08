@@ -93,17 +93,19 @@ def run_openai_loop(
     tools: list[dict],
     conversation_history: list[dict],
     execute_tool,
+    model: str | None = None,
 ) -> dict[str, Any]:
     """Run the OpenAI agentic loop. Mirrors handle_conversation_turn in receptionist.py."""
     oa_tools = _tools_for_openai(tools)
     oa_messages = [{"role": "system", "content": system_prompt}, *_claude_to_openai(conversation_history)]
+    _model = model or OPENAI_MODEL
 
     should_end = False
     last_tool: str | None = None
 
     while True:
         resp = client.chat.completions.create(
-            model=OPENAI_MODEL,
+            model=_model,
             max_tokens=1024,
             tools=oa_tools,
             messages=oa_messages,
