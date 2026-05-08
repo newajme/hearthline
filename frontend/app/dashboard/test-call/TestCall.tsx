@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+const VAPI_SECRET = process.env.NEXT_PUBLIC_VAPI_SECRET ?? "";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
@@ -38,7 +39,10 @@ export default function TestCall({ personaName = "Anna" }: { personaName?: strin
     try {
       const res = await fetch(`${API_URL}/calls/vapi/chat/completions/`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(VAPI_SECRET ? { "Authorization": `Bearer ${VAPI_SECRET}` } : {}),
+        },
         body: JSON.stringify({
           messages: next,
           call: { customer: { number: phone.replace(/[^\d+]/g, "") } },
