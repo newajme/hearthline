@@ -9,7 +9,7 @@ This file is loaded by Claude Code on every conversation. It captures the
 
 **Hearthline** is an open-source AI front desk for home-service teams (HVAC,
 plumbing, roofing, solar, energy renovation, garage, electrical, landscaping,
-cleaning, pest control). MIT licensed. Built in public.
+cleaning, pest control). AGPL-3.0 licensed (commercial license available). Built in public.
 
 Tagline: *"The 24/7 AI front desk for home services."*
 
@@ -55,15 +55,20 @@ self-host (or pay Rashid to deploy). No multi-tenant SaaS yet.
 ```
 hearthline/
 ├── README.md                    # public-facing
-├── LICENSE                      # MIT, Muhammad Rashid 2026
+├── LICENSE                      # AGPL-3.0, Muhammad Rashid 2026
+├── COMMERCIAL.md                # commercial license terms
+├── AGENTS.md                    # agent entry point (this project's AI coding guide)
 ├── CONTRIBUTING.md              # PR workflow
 ├── DEPLOY.md                    # Vercel + VPS deploy guide
 ├── CLAUDE.md                    # this file
+├── vercel.json                  # Vercel frontend deploy config
 ├── docker-compose.yml           # local dev
 ├── docker-compose.prod.yml      # VPS production
 ├── Caddyfile                    # auto-HTTPS reverse proxy for VPS
-├── vercel.json                  # multi-service config (frontend + backend)
 ├── .env.example                 # all env vars documented
+├── solar-pakistan-knowledge-base.md  # domain knowledge injected into Anna's prompt
+├── scripts/
+│   └── test-quickstart.sh       # smoke-tests the docker-compose stack
 ├── .github/                     # CI, FUNDING, issue/PR templates
 ├── frontend/                    # Next.js app
 │   ├── app/                     # routes
@@ -72,7 +77,7 @@ hearthline/
 │   │   ├── dashboard/           # full SaaS app shell
 │   │   │   ├── layout.tsx       # sidebar + global topbar
 │   │   │   ├── page.tsx         # Overview
-│   │   │   ├── leads/, calls/, quotes/, customers/, settings/, test-call/
+│   │   │   ├── leads/, calls/, quotes/, customers/, support/, settings/, test-call/
 │   │   │   └── lib.ts, parts.tsx
 │   │   ├── HeroBackdrop.tsx     # animated SVG sketches behind hero
 │   │   ├── HeroPipeline.tsx     # 5-stage cartoon flow
@@ -82,7 +87,6 @@ hearthline/
 │   │   ├── LiveTicker.tsx       # scrolling activity ticker
 │   │   ├── FeatureExplorer.tsx  # interactive feature switcher
 │   │   └── globals.css          # all styles in one file (intentional)
-│   ├── vercel.json
 │   └── package.json             # Next 15.5.x + React 19
 └── backend/                     # Django
     ├── api/index.py             # Vercel Python WSGI entrypoint
@@ -93,20 +97,22 @@ hearthline/
     ├── requirements.txt
     ├── hearthline/              # Django project (settings, urls, wsgi, asgi)
     └── apps/
-        ├── core/                # Business, Channel
+        ├── core/                # Business, Channel, encrypted-key fields
         ├── leads/               # Customer, Lead, Conversation, Message
         │   └── management/commands/seed_demo.py    # populates dashboard
         ├── calls/               # Call + Vapi/Twilio + Anna agent
         │   ├── views.py         # CallList, VapiWebhook, TwilioWebhook, chat_completions
         │   ├── agent/
         │   │   ├── prompts.py        # Anna's system prompt
-        │   │   ├── tools.py          # 5 tool schemas
-        │   │   └── receptionist.py   # agentic loop (Claude + tool dispatch)
-        │   └── services/
-        │       ├── sms.py            # Twilio sender (stubs without keys)
-        │       ├── scheduling.py     # slot availability stub
-        │       └── persistence.py    # qualify_lead_tool, book_appointment_tool
-        ├── quotes/              # Quote, LineItem (editable, printable PDF)
+        │   │   ├── tools.py          # 7 tool schemas
+        │   │   └── receptionist.py   # agentic loop (Claude + OpenAI)
+        │   ├── services/
+        │   │   ├── sms.py, email.py  # Twilio / SMTP senders (stub without keys)
+        │   │   ├── scheduling.py     # slot availability stub
+        │   │   └── persistence.py    # qualify_lead_tool, book_appointment_tool
+        │   └── tests/               # test_views.py, test_persistence.py
+        ├── quotes/              # Quote, LineItem (editable + server-side PDF)
+        ├── support/             # Ticket, TicketMessage — WhatsApp/SMS/email/chat webhooks + reply
         └── ai/                  # services.py — transcript → structured lead extraction
 ```
 
@@ -117,7 +123,7 @@ hearthline/
 - `/faq`, `/privacy`, `/terms`, `/docs` — legal + OSS docs
 - `/dashboard` — Overview (KPIs + Recent Interactions)
 - `/dashboard/leads` (`+ /[id]`), `/dashboard/calls`, `/dashboard/quotes` (`+ /new`, `/[id]`)
-- `/dashboard/customers`, `/dashboard/settings`, `/dashboard/test-call`
+- `/dashboard/customers`, `/dashboard/support`, `/dashboard/settings`, `/dashboard/test-call`
 
 **API endpoints:**
 - `GET  /api/health/`
@@ -134,8 +140,8 @@ hearthline/
 2. View converts OpenAI-format messages → Claude format, runs the loop in
    `apps/calls/agent/receptionist.py`.
 3. Claude can call tools (`qualify_lead`, `check_availability`,
-   `book_appointment`, `send_sms`, `end_call`). Tool dispatchers are in
-   `apps/calls/services/`.
+   `book_appointment`, `draft_quote`, `send_sms`, `send_email`, `end_call`).
+   Tool dispatchers are in `apps/calls/services/`.
 4. Lead/Customer rows are created/updated as Anna learns more.
 5. Final response returns as OpenAI completion. SSE streaming supported.
    `X-Vapi-End-Call: true` header tells Vapi to hang up.
@@ -150,8 +156,9 @@ If `ANTHROPIC_API_KEY` is missing the agent returns a friendly stub so dev never
 
 ```bash
 docker compose up --build              # 3 services: db, backend, frontend
-docker compose exec backend python manage.py seed_demo --wipe   # seed
-docker compose exec backend python manage.py createsuperuser
+docker compose exec backend python manage.py seed_demo --wipe   # seed demo data
+docker compose exec backend python manage.py seed_admin         # default admin / hearthline login
+docker compose exec backend python manage.py createsuperuser    # custom superuser
 ```
 
 URLs:
